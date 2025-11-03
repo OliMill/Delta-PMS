@@ -10,10 +10,10 @@ public class Staff {
     private String email;
     private String username;
     private String passwordHash;
-    private String role;
+    private String job;
     
     public Staff(int staffID, String firstName, String lastName, LocalDate dob, 
-                 String email, String username, String passwordHash, String role) {
+                 String email, String username, String passwordHash, String job) {
         this.staffID = staffID;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -21,7 +21,7 @@ public class Staff {
         this.email = email;
         this.username = username;
         this.passwordHash = passwordHash;
-        this.role = role;
+        this.job = job;
     }
 
     public int getStaffID() {
@@ -52,8 +52,8 @@ public class Staff {
         return passwordHash;
     }
 
-    public String getRole() {
-        return role;
+    public String getJob() {
+        return job;
     }
 
     public void setStaffID(int staffID) {
@@ -84,9 +84,7 @@ public class Staff {
         this.passwordHash = passwordHash;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setJob(String job) {
+        this.job = job;
     }
-    
-
 }

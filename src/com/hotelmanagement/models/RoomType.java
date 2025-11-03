@@ -117,20 +117,4 @@ public class RoomType {
     public int getSleepingCapacity() {
         return singleBeds + (doubleBeds * 2);
     }
-    
-    public String getAmenitiesSummary() {
-        StringBuilder amenities = new StringBuilder();
-        if (hasDesk) amenities.append("Desk, ");
-        if (hasBath) amenities.append("Bath, ");
-        if (hasShower) amenities.append("Shower, ");
-        if (hasTV) amenities.append("TV, ");
-        if (hasCoffee) amenities.append("Coffee, ");
-        if (hasDepositBox) amenities.append("Safe, ");
-        
-        // Remove trailing comma and space
-        if (amenities.length() > 0) {
-            amenities.setLength(amenities.length() - 2);
-        }
-        return amenities.toString();
-    }
 }
