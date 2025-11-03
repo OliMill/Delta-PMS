@@ -26,7 +26,7 @@ public class DataManager {
             e.printStackTrace();
         }
     }
-
+    //functions to set database into Lists.
     private static void loadStaff(Connection conn) throws SQLException {
         String sql = "SELECT * FROM Staff";
         try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
@@ -115,7 +115,7 @@ public class DataManager {
             }
         }
     }
-
+    //getters
     public static List<Customer> getCustomers() {
         return customers;
     }

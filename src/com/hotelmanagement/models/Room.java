@@ -11,12 +11,9 @@ public class Room {
     
     private RoomType roomType;
     
-    public Room(int roomNo, int roomTypeID, BigDecimal pricePerNight) {
+    public Room(int roomNo, int roomTypeID) {
         this.roomNo = roomNo;
         this.roomTypeID = roomTypeID;
-        this.pricePerNight = pricePerNight;
-        this.isAvailable = true;
-        this.currentBookingID = null;
     }
 
     public int getRoomNo() {
@@ -25,22 +22,6 @@ public class Room {
 
     public int getRoomTypeID() {
         return roomTypeID;
-    }
-
-    public BigDecimal getPricePerNight() {
-        return pricePerNight;
-    }
-
-    public boolean isIsAvailable() {
-        return isAvailable;
-    }
-
-    public Integer getCurrentBookingID() {
-        return currentBookingID;
-    }
-
-    public RoomType getRoomType() {
-        return roomType;
     }
 
     public void setRoomNo(int roomNo) {

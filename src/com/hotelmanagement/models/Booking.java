@@ -1,7 +1,6 @@
 package com.hotelmanagement.models;
 
 import java.time.LocalDate;
-import java.math.BigDecimal;
 
 public class Booking {
     private int bookingID;
@@ -10,18 +9,16 @@ public class Booking {
     private LocalDate dateMade;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
-    private BigDecimal totalPrice;
     private boolean depositPaid;
     
     public Booking(int bookingID, int customerID, int roomNo, LocalDate dateMade, 
-                   LocalDate checkInDate, LocalDate checkOutDate, BigDecimal totalPrice, boolean depositPaid) {
+        LocalDate checkInDate, LocalDate checkOutDate, boolean depositPaid) {
         this.bookingID = bookingID;
         this.customerID = customerID;
         this.roomNo = roomNo;
         this.dateMade = dateMade;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
-        this.totalPrice = totalPrice;
         this.depositPaid = depositPaid;
     }
 
@@ -47,10 +44,6 @@ public class Booking {
 
     public LocalDate getCheckOutDate() {
         return checkOutDate;
-    }
-
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
     }
 
     public boolean isDepositPaid() {
@@ -79,10 +72,6 @@ public class Booking {
 
     public void setCheckOutDate(LocalDate checkOutDate) {
         this.checkOutDate = checkOutDate;
-    }
-
-    public void setTotalPrice(BigDecimal totalPrice) {
-        this.totalPrice = totalPrice;
     }
 
     public void setDepositPaid(boolean depositPaid) {
