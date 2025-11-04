@@ -2,6 +2,7 @@ package com.hotelmanagement.dao;
 
 import com.hotelmanagement.models.*;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +15,16 @@ public class DataManager {
     private static List<Staff> staff = new ArrayList<>();
     private static List<Staff> managers = new ArrayList<>();
 
-    //initialising all the data
+    // Initialising all the data
     public static void loadDataFromDatabase() {
+        // Clear all lists before loading to prevent duplicate data on reload
+        customers.clear();
+        rooms.clear();
+        roomTypes.clear();
+        bookings.clear();
+        staff.clear();
+        managers.clear();
+        
         try (Connection conn = DatabaseConnection.getConnection()) {
             loadStaff(conn);
             loadCustomers(conn);
@@ -23,15 +32,19 @@ public class DataManager {
             loadRooms(conn);
             loadBookings(conn);
         } catch (SQLException e) {
-            e.printStackTrace();
+            // Print a clean error message if loading fails
+            System.err.println("Failed to load data from database:");
         }
     }
-    //functions to set database into Lists.
+    
+    // Functions to set database into Lists.
     private static void loadStaff(Connection conn) throws SQLException {
         String sql = "SELECT * FROM Staff";
         try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
+                String role = rs.getString("Role"); 
+                
                 Staff s = new Staff(
                         rs.getInt("StaffID"),
                         rs.getString("FirstName"),
@@ -40,30 +53,37 @@ public class DataManager {
                         rs.getString("Email"),
                         rs.getString("Username"),
                         rs.getString("PasswordHash"),
-                        rs.getString("Job")
+                        role
                 );
                 staff.add(s);
+                
+                // if staff is manager also add to manager list
+                if (role != null && role.equalsIgnoreCase("Manager")) {
+                    managers.add(s);
+                }
             }
         }
     }
+    
     private static void loadCustomers(Connection conn) throws SQLException {
         String sql = "SELECT * FROM Customer";
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Customer c = new Customer(
-                    rs.getInt("CustomerID"),
-                    rs.getString("FirstName"),
-                    rs.getString("LastName"),
-                    rs.getDate("DOB").toLocalDate(),
-                    rs.getString("Email"),
-                    rs.getString("Username"),
-                    rs.getString("PasswordHash")
+                        rs.getInt("CustomerID"),
+                        rs.getString("FirstName"),
+                        rs.getString("LastName"),
+                        rs.getDate("DOB").toLocalDate(),
+                        rs.getString("Email"),
+                        rs.getString("Username"),
+                        rs.getString("PasswordHash")
                 );
                 customers.add(c);
             }
         }
     }
+    
     private static void loadRoomTypes(Connection conn) throws SQLException {
         String sql = "SELECT * FROM RoomType";
         try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
@@ -84,38 +104,41 @@ public class DataManager {
             }
         }
     }
+    
     private static void loadRooms(Connection conn) throws SQLException {
         String sql = "SELECT * FROM Rooms";
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Room r = new Room(
-                    rs.getInt("RoomNo"),
-                    rs.getInt("RoomTypeID")
+                        rs.getInt("RoomNo"),
+                        rs.getInt("RoomTypeID")
                 );
                 rooms.add(r);
             }
         }
     }
-       private static void loadBookings(Connection conn) throws SQLException {
+    
+    private static void loadBookings(Connection conn) throws SQLException {
         String sql = "SELECT * FROM Booking";
         try (PreparedStatement stmt = conn.prepareStatement(sql);
              ResultSet rs = stmt.executeQuery()) {
             while (rs.next()) {
                 Booking b = new Booking(
-                    rs.getInt("BookingID"),
-                    rs.getInt("CustomerID"),
-                    rs.getInt("RoomNo"),
-                    rs.getDate("DateMade").toLocalDate(),
-                    rs.getDate("CheckInDate").toLocalDate(),
-                    rs.getDate("CheckOutDate").toLocalDate(),
-                    rs.getBoolean("DepositePaid")
+                        rs.getInt("BookingID"),
+                        rs.getInt("CustomerID"),
+                        rs.getInt("RoomNo"),
+                        rs.getDate("DateMade").toLocalDate(),
+                        rs.getDate("CheckInDate").toLocalDate(),
+                        rs.getDate("CheckOutDate").toLocalDate(),
+                        rs.getBoolean("DepositePaid") 
                 );
                 bookings.add(b);
             }
         }
     }
-    //getters
+    
+    // Getters
     public static List<Customer> getCustomers() {
         return customers;
     }
