@@ -25,7 +25,7 @@ public class DeltaPMSPrototype {
             
             // Show a user-friendly error dialog
             JOptionPane.showMessageDialog(
-                null, // Parent component (none)
+                null,
                 "Failed to load application data.\nThe application will now close.\n\nError: " + e.getMessage(), // Message
                 "Application Error",
                 JOptionPane.ERROR_MESSAGE
