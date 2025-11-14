@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 
 public class DeltaPMSPrototype {
 
-    /**
+    /** Good kitten
      * @param args the command line arguments
      */
     public static void main(String[] args) {
