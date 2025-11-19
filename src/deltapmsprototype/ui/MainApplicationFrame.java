@@ -1,23 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-package deltapmsprototype.ui;
 
-/**
- *
- * @author 4-omillard
- */
+package deltapmsprototype.ui;
+import java.awt.CardLayout;
+import java.util.HashMap;
+import java.util.Map;
+import javax.swing.JPanel;
 public class MainApplicationFrame extends javax.swing.JFrame {
     
-    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainApplicationFrame.class.getName());
-
-    /**
-     * Creates new form MainApplicationFrame
-     */
-    public MainApplicationFrame() {
+    private CardLayout cl;
+    private final Map<String,JPanel> panels;
+    
+    public MainApplicationFrame(){
+        this.panels = new HashMap<>();
         initComponents();
+        initPanels();
     }
+    
+    private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainApplicationFrame.class.getName());
 
     /**
      * This method is called from within the constructor to initialize the form.
