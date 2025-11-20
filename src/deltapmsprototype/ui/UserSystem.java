@@ -13,8 +13,10 @@ public class UserSystem extends javax.swing.JPanel {
     /**
      * Creates new form UserSystem
      */
-    public UserSystem() {
+    private final MainApplicationFrame MainApplication;
+    public UserSystem(MainApplicationFrame MainApplication) {
         initComponents();
+        this.MainApplication = MainApplication;
     }
 
     /**

@@ -87,4 +87,5 @@ public class Staff {
     public void setJob(String job) {
         this.job = job;
     }
+    
 }
