@@ -18,7 +18,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         cl = (CardLayout) getContentPane().getLayout();
         
         panels.put("UserSystem", new UserSystem(this));
-        
+        panels.put("NewBookingCustomer", new NewBookingCustomer(this));
         for(Map.Entry<String, JPanel> entry: panels.entrySet())
             getContentPane().add(entry.getValue(),entry.getKey());
     }

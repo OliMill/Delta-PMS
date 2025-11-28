@@ -9,15 +9,12 @@ package deltapmsprototype.ui;
  * @author 4-omillard
  */
 public class UserSystem extends javax.swing.JPanel {
-
-    /**
-     * Creates new form UserSystem
-     */
-    private final MainApplicationFrame MainApplication;
+    private final MainApplicationFrame MainApplication1;
     public UserSystem(MainApplicationFrame MainApplication) {
         initComponents();
-        this.MainApplication = MainApplication;
+        MainApplication1 = MainApplication;
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -61,6 +58,11 @@ public class UserSystem extends javax.swing.JPanel {
         jButton1.setText("Create a booking");
         jButton1.setToolTipText("");
         jButton1.setPreferredSize(new java.awt.Dimension(160, 60));
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
         jPanel2.add(jButton1, new java.awt.GridBagConstraints());
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -95,6 +97,11 @@ public class UserSystem extends javax.swing.JPanel {
                 .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        // TODO add your handling code here:
+        MainApplication1.showPanel("NewBookingCustomer");
+    }//GEN-LAST:event_jButton1MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

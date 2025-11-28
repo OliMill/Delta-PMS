@@ -3,18 +3,41 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package deltapmsprototype.ui;
+import java.text.SimpleDateFormat;
 
-/**
- *
- * @author 4-omillard
- */
+
 public class NewBookingCustomer extends javax.swing.JPanel {
 
-    /**
-     * Creates new form NewBookingCustomer
-     */
-    public NewBookingCustomer() {
+    private final MainApplicationFrame MainApplication;
+    
+    public NewBookingCustomer(MainApplicationFrame MainApplication) {
         initComponents();
+        this.MainApplication = MainApplication;
+        // --- CALENDAR INITIALIZATION LOGIC START (SAFE ZONE) ---
+        dateCalendar = new com.toedter.calendar.JCalendar();
+        calendarPopup = new javax.swing.JPopupMenu();
+
+        // 1. Add the JCalendar to the JPopupMenu
+        calendarPopup.add(dateCalendar);
+
+        // Set initial button text to today's date
+        jButton2.setText("Select Date: " + DATE_FORMAT.format(new java.util.Date()));
+
+        // 2. Add the listener to handle date selection
+        dateCalendar.addPropertyChangeListener("calendar", new java.beans.PropertyChangeListener() {
+            @Override
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                if ("calendar".equals(evt.getPropertyName())) {
+                    java.util.Date selectedDate = dateCalendar.getDate();
+
+                    // Update the button's text
+                    jButton2.setText("Selected Date: " + DATE_FORMAT.format(selectedDate));
+
+                    // Hide the popup
+                    calendarPopup.setVisible(false);
+                }
+            }
+        });
     }
 
     /**
@@ -26,8 +49,7 @@ public class NewBookingCustomer extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jEditorPane1 = new javax.swing.JEditorPane();
+        jPopupMenu1 = new javax.swing.JPopupMenu();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
@@ -43,8 +65,6 @@ public class NewBookingCustomer extends javax.swing.JPanel {
         jPanel10 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-
-        jScrollPane2.setViewportView(jEditorPane1);
 
         setLayout(new java.awt.CardLayout());
 
@@ -99,7 +119,7 @@ public class NewBookingCustomer extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 234, Short.MAX_VALUE))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSpinner1)
@@ -196,16 +216,18 @@ public class NewBookingCustomer extends javax.swing.JPanel {
 
         add(jPanel2, "card2");
     }// </editor-fold>//GEN-END:initComponents
-
+    
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
-        // TODO add your handling code here:
+        int x = 0;
+        int y = jButton2.getHeight();
+        // Show the popup relative to jButton2
+        calendarPopup.show(jButton2, x, y);
     }//GEN-LAST:event_jButton2MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -215,10 +237,14 @@ public class NewBookingCustomer extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel20;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPopupMenu jPopupMenu1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JSpinner jSpinner2;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
+    private com.toedter.calendar.JCalendar dateCalendar;
+    private javax.swing.JPopupMenu calendarPopup;
+    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
 }
