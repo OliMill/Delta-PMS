@@ -2,6 +2,7 @@ package deltapmsprototype;
 
 import deltapmsprototype.ui.MainApplicationFrame;
 import com.hotelmanagement.dao.DataManager; 
+import deltapmsprototype.ui.MainApplicationFrame;
 import javax.swing.JOptionPane; 
 
 public class DeltaPMSPrototype {
