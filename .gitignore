@@ -10,7 +10,7 @@ nbdist/
 *.class
 
 # Package files
-*.jar
+
 *.war
 *.ear
 *.zip
