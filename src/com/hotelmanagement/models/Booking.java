@@ -6,17 +6,15 @@ public class Booking {
     private int bookingID;
     private int customerID;
     private int roomNo;
-    private LocalDate dateMade;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private boolean depositPaid;
     
-    public Booking(int bookingID, int customerID, int roomNo, LocalDate dateMade, 
+    public Booking(int bookingID, int customerID, int roomNo, 
         LocalDate checkInDate, LocalDate checkOutDate, boolean depositPaid) {
         this.bookingID = bookingID;
         this.customerID = customerID;
         this.roomNo = roomNo;
-        this.dateMade = dateMade;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.depositPaid = depositPaid;
@@ -32,10 +30,6 @@ public class Booking {
 
     public int getRoomNo() {
         return roomNo;
-    }
-
-    public LocalDate getDateMade() {
-        return dateMade;
     }
 
     public LocalDate getCheckInDate() {
@@ -60,10 +54,6 @@ public class Booking {
 
     public void setRoomNo(int roomNo) {
         this.roomNo = roomNo;
-    }
-
-    public void setDateMade(LocalDate dateMade) {
-        this.dateMade = dateMade;
     }
 
     public void setCheckInDate(LocalDate checkInDate) {
