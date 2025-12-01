@@ -1,19 +1,63 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package deltapmsprototype.ui;
-import java.text.SimpleDateFormat;
 
+import com.hotelmanagement.dao.DataManager;
+import com.hotelmanagement.models.Room;
+import com.hotelmanagement.models.RoomType;
+import deltapms.session.UserSession;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class NewBookingCustomer extends javax.swing.JPanel {
 
     private final MainApplicationFrame MainApplication;
-    
+    private List<Room> currentAvailableRooms = new ArrayList<>();
+    private int selectedRoomRow = -1;
+    private com.toedter.calendar.JCalendar dateCalendar;
+    private javax.swing.JPopupMenu calendarPopup;
+    private com.toedter.calendar.JCalendar dateCalendar2;
+    private javax.swing.JPopupMenu calendarPopup2;
+    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
     public NewBookingCustomer(MainApplicationFrame MainApplication) {
         initComponents();
         this.MainApplication = MainApplication;
-        //CALENDAR INITIALIZATION LOGIC START
+
+        // Add mouse click listeners for calendar popups
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
+
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton3MouseClicked(evt);
+            }
+        });
+
+        // Add action listener for search button
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        // Add mouse listener for confirm button
+        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton4MouseClicked(evt);
+            }
+        });
+
+        // Check if user is logged in (moved to when panel is actually used)
+        // We'll check when the user tries to search instead
+        // CALENDAR INITIALIZATION LOGIC START
         dateCalendar = new com.toedter.calendar.JCalendar();
         calendarPopup = new javax.swing.JPopupMenu();
 
@@ -38,14 +82,16 @@ public class NewBookingCustomer extends javax.swing.JPanel {
                 }
             }
         });
+
         dateCalendar2 = new com.toedter.calendar.JCalendar();
         calendarPopup2 = new javax.swing.JPopupMenu();
 
         // 1. Add the JCalendar to the JPopupMenu
         calendarPopup2.add(dateCalendar2);
 
-        // Set initial button text to today's date
-        jButton3.setText("Select Date: " + DATE_FORMAT.format(new java.util.Date()));
+        // Set initial button text to tomorrow's date
+        Date tomorrow = new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000);
+        jButton3.setText("Select Date: " + DATE_FORMAT.format(tomorrow));
 
         // 2. Add the listener to handle date selection
         dateCalendar2.addPropertyChangeListener("calendar", new java.beans.PropertyChangeListener() {
@@ -62,6 +108,238 @@ public class NewBookingCustomer extends javax.swing.JPanel {
                 }
             }
         });
+
+        // Initialize table with proper column names
+        initializeTable();
+    }
+
+    private void initializeTable() {
+        // Set up table column names
+        String[] columnNames = {
+            "Room No",
+            "Room Type",
+            "Bathrooms",
+            "Single Beds",
+            "Double Beds",
+            "Desk",
+            "Bath",
+            "Shower",
+            "TV",
+            "Coffee",
+            "Safe"
+        };
+
+        DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Make table non-editable
+            }
+
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                // Set proper column classes for boolean columns
+                if (columnIndex >= 5 && columnIndex <= 10) {
+                    return Boolean.class;
+                }
+                return Object.class;
+            }
+        };
+
+        jTable1.setModel(model);
+        jTable1.setRowHeight(25);
+        jTable1.getSelectionModel().addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                selectedRoomRow = jTable1.getSelectedRow();
+                jButton4.setEnabled(selectedRoomRow >= 0);
+            }
+        });
+
+        // Initially disable confirm button until a room is selected
+        jButton4.setEnabled(false);
+    }
+
+    private void populateTableWithRooms(List<Room> rooms) {
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        model.setRowCount(0); // Clear existing rows
+
+        if (rooms.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "No rooms found matching your criteria.",
+                    "No Results",
+                    JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        for (Room room : rooms) {
+            // Get room type details
+            RoomType type = getRoomTypeById(room.getRoomTypeID());
+            if (type != null) {
+                Object[] row = new Object[]{
+                    room.getRoomNo(),
+                    getRoomTypeName(type),
+                    type.getBathrooms(),
+                    type.getSingleBeds(),
+                    type.getDoubleBeds(),
+                    type.isHasDesk(),
+                    type.isHasBath(),
+                    type.isHasShower(),
+                    type.isHasTV(),
+                    type.isHasCoffee(),
+                    type.isHasDepositBox()
+                };
+                model.addRow(row);
+            }
+        }
+
+        currentAvailableRooms = rooms;
+        JOptionPane.showMessageDialog(this,
+                "Found " + rooms.size() + " available rooms.",
+                "Search Results",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private RoomType getRoomTypeById(int typeId) {
+        List<RoomType> roomTypes = DataManager.getRoomTypes();
+        for (RoomType type : roomTypes) {
+            if (type.getRoomTypeID() == typeId) {
+                return type;
+            }
+        }
+        return null;
+    }
+
+    private String getRoomTypeName(RoomType type) {
+        if (type == null) {
+            return "Unknown";
+        }
+
+        return switch (type.getRoomTypeID()) {
+            case 1 ->
+                "Standard";
+            case 2 ->
+                "Deluxe";
+            case 3 ->
+                "Family Suite";
+            case 4 ->
+                "Business Suite";
+            case 5 ->
+                "Executive Suite";
+            case 6 ->
+                "Economy";
+            case 7 ->
+                "Penthouse";
+            default ->
+                "Type " + type.getRoomTypeID();
+        };
+    }
+
+    private LocalDate convertDate(Date date) {
+        return date.toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate();
+    }
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {
+        int x = 0;
+        int y = jButton2.getHeight();
+        // Show the popup relative to jButton2
+        calendarPopup.show(jButton2, x, y);
+    }
+
+    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {
+        int x = 0;
+        int y = jButton3.getHeight();
+        // Show the popup relative to jButton3
+        calendarPopup2.show(jButton3, x, y);
+    }
+
+    private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {
+        if (selectedRoomRow >= 0 && selectedRoomRow < currentAvailableRooms.size()) {
+            Room selectedRoom = currentAvailableRooms.get(selectedRoomRow);
+
+            // Get selected dates
+            LocalDate checkIn = convertDate(dateCalendar.getDate());
+            LocalDate checkOut = convertDate(dateCalendar2.getDate());
+
+            // Validate dates
+            if (checkOut.isBefore(checkIn) || checkOut.isEqual(checkIn)) {
+                JOptionPane.showMessageDialog(this,
+                        "Check-out date must be after check-in date.",
+                        "Invalid Dates",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Store booking in session
+            deltapms.session.BookingSession.startNewBooking(selectedRoom, checkIn, checkOut);
+
+            // Navigate to confirmation panel
+            MainApplication.showPanel("ConfirmNewBookingCustomer");
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Please select a room from the table first.",
+                    "No Room Selected",
+                    JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
+        // Check login when trying to search
+        if (!UserSession.isLoggedIn()) {
+            JOptionPane.showMessageDialog(this,
+                    "Please login first to search for rooms.",
+                    "Access Denied",
+                    JOptionPane.WARNING_MESSAGE);
+            MainApplication.showPanel("UserSystem"); // or whatever your login panel is
+            return;
+        }
+
+        // Search for rooms button clicked
+        // Get selected dates
+        Date startDate = dateCalendar.getDate();
+        Date endDate = dateCalendar2.getDate();
+
+        if (startDate == null || endDate == null) {
+            JOptionPane.showMessageDialog(this,
+                    "Please select both check-in and check-out dates.",
+                    "Missing Dates",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        LocalDate checkIn = convertDate(startDate);
+        LocalDate checkOut = convertDate(endDate);
+
+        // Validate date range
+        if (checkOut.isBefore(checkIn) || checkOut.isEqual(checkIn)) {
+            JOptionPane.showMessageDialog(this,
+                    "Check-out date must be after check-in date.",
+                    "Invalid Dates",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Get filter criteria
+        int minBathrooms = (Integer) jSpinner1.getValue();
+        int minBeds = (Integer) jSpinner2.getValue();
+
+        // Get all available rooms for the date range
+        List<Room> allAvailableRooms = DataManager.getAvailableRooms(checkIn, checkOut);
+
+        // Apply additional filters
+        List<Room> filteredRooms = new ArrayList<>();
+        for (Room room : allAvailableRooms) {
+            RoomType type = getRoomTypeById(room.getRoomTypeID());
+            if (type != null) {
+                int totalBeds = type.getSingleBeds() + (type.getDoubleBeds() * 2);
+                if (type.getBathrooms() >= minBathrooms && totalBeds >= minBeds) {
+                    filteredRooms.add(room);
+                }
+            }
+        }
+
+        // Display results in table
+        populateTableWithRooms(filteredRooms);
     }
 
     /**
@@ -118,19 +396,9 @@ public class NewBookingCustomer extends javax.swing.JPanel {
         jPanel20.setPreferredSize(new java.awt.Dimension(184, 2));
 
         jButton1.setText("Search for rooms");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
 
         jButton2.setText("Select start date");
         jButton2.setActionCommand("Select Date");
-        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton2MouseClicked(evt);
-            }
-        });
 
         jLabel3.setText("Beds");
 
@@ -171,18 +439,8 @@ public class NewBookingCustomer extends javax.swing.JPanel {
 
         jButton3.setText("Select end date");
         jButton3.setActionCommand("Select Date");
-        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton3MouseClicked(evt);
-            }
-        });
 
         jButton4.setText("Confirm Selected Room");
-        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton4MouseClicked(evt);
-            }
-        });
 
         javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
         jPanel20.setLayout(jPanel20Layout);
@@ -240,7 +498,7 @@ public class NewBookingCustomer extends javax.swing.JPanel {
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel20, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1272, Short.MAX_VALUE)
+            .addComponent(jPanel20, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1376, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -267,29 +525,6 @@ public class NewBookingCustomer extends javax.swing.JPanel {
 
         add(jPanel2, "card2");
     }// </editor-fold>//GEN-END:initComponents
-    
-    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
-        int x = 0;
-        int y = jButton2.getHeight();
-        // Show the popup relative to jButton2
-        calendarPopup.show(jButton2, x, y);
-    }//GEN-LAST:event_jButton2MouseClicked
-
-    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
-        int x = 0;
-        int y = jButton3.getHeight();
-        // Show the popup relative to jButton3
-        calendarPopup2.show(jButton3, x, y);
-    }//GEN-LAST:event_jButton3MouseClicked
-
-    private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
-        MainApplication.showPanel("ConfirmNewBookingCustomer");
-    }//GEN-LAST:event_jButton4MouseClicked
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton1ActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -310,10 +545,5 @@ public class NewBookingCustomer extends javax.swing.JPanel {
     private javax.swing.JSpinner jSpinner2;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
-    private com.toedter.calendar.JCalendar dateCalendar;
-    private javax.swing.JPopupMenu calendarPopup;
-    private com.toedter.calendar.JCalendar dateCalendar2;
-    private javax.swing.JPopupMenu calendarPopup2;
-    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
 }

@@ -1,9 +1,15 @@
-
 package deltapmsprototype.ui;
+
 import java.awt.CardLayout;
 import java.util.HashMap;
 import java.util.Map;
 import javax.swing.JPanel;
+import com.hotelmanagement.dao.DataManager;
+import com.hotelmanagement.models.Customer;
+import com.hotelmanagement.models.Staff;
+import java.util.List;
+import javax.swing.JOptionPane;
+
 public class MainApplicationFrame extends javax.swing.JFrame {
     
     private CardLayout cl;
@@ -29,6 +35,31 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         getContentPane().repaint();
     }
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainApplicationFrame.class.getName());
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
+            logger.log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(() -> new MainApplicationFrame().setVisible(true));
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -159,35 +190,108 @@ public class MainApplicationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here
-        showPanel("UserSystem");
-    }//GEN-LAST:event_jButton1ActionPerformed
+   String email = jTextField1.getText().trim();
+    String password = new String(jPasswordField1.getPassword());
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new MainApplicationFrame().setVisible(true));
+    // Validate input
+    if (email.isEmpty() || password.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+                "Please enter both email and password.",
+                "Login Error",
+                JOptionPane.ERROR_MESSAGE);
+        return;
     }
 
+    // Get the loaded data from DataManager
+    List<Customer> customers = DataManager.getCustomers();
+    List<Staff> staff = DataManager.getStaff();
+
+    boolean loggedIn = false;
+
+    // 1. Check customers first
+    for (Customer customer : customers) {
+        if (customer.getEmail().equalsIgnoreCase(email)) {
+            // For prototyping purposes ignore hashing
+            if (customer.getPasswordHash().equals(password)) {
+                // Set up user session
+                deltapms.session.UserSession.login(
+                    customer.getFirstName() + " " + customer.getLastName(),
+                    "Customer",
+                    customer.getEmail(),
+                    customer.getCustomerID()
+                );
+                loggedIn = true;
+                break;
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Incorrect password for customer account.",
+                        "Login Error",
+                        JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+    }
+
+    // 2. If not a customer, check staff (includes Managers in list)
+    if (!loggedIn) {
+        for (Staff staffMember : staff) {
+            if (staffMember.getEmail().equalsIgnoreCase(email)) {
+                if (staffMember.getPasswordHash().equals(password)) {
+                    // Set up user session
+                    deltapms.session.UserSession.login(
+                        staffMember.getFirstName() + " " + staffMember.getLastName(),
+                        staffMember.getRole(),
+                        staffMember.getEmail(),
+                        staffMember.getStaffID()
+                    );
+                    loggedIn = true;
+                    break;
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "Incorrect password for staff account.",
+                            "Login Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+        }
+    }
+
+    if (loggedIn) {
+        // Clear password field for security
+        jPasswordField1.setText("");
+        
+        // Show success message with user info
+        JOptionPane.showMessageDialog(this,
+                "Login successful!\nWelcome, " + deltapms.session.UserSession.getUserName() + 
+                "\nRole: " + deltapms.session.UserSession.getUserRole(),
+                "Login Success",
+                JOptionPane.INFORMATION_MESSAGE);
+
+        // Debug: print session info to console
+        System.out.println("=== USER SESSION STARTED ===");
+        System.out.println("Name: " + deltapms.session.UserSession.getUserName());
+        System.out.println("Role: " + deltapms.session.UserSession.getUserRole());
+        System.out.println("Email: " + deltapms.session.UserSession.getUserEmail());
+        System.out.println("ID: " + deltapms.session.UserSession.getUserId());
+        System.out.println("Is Customer: " + deltapms.session.UserSession.isCustomer());
+        System.out.println("Is Staff: " + deltapms.session.UserSession.isStaff());
+        System.out.println("Is Manager: " + deltapms.session.UserSession.isManager());
+        System.out.println("============================");
+
+        // Navigate to appropriate panel based on user role
+        showPanel("UserSystem");
+    } else {
+        // No user found with this email
+        JOptionPane.showMessageDialog(this,
+                "No account found with this email address.\nPlease check your email or create a new account.",
+                "Login Error",
+                JOptionPane.ERROR_MESSAGE);
+    }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

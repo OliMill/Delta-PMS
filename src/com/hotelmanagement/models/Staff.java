@@ -52,7 +52,7 @@ public class Staff {
         return passwordHash;
     }
 
-    public String getJob() {
+    public String getRole() {
         return job;
     }
 
