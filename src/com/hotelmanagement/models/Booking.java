@@ -9,15 +9,16 @@ public class Booking {
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private boolean depositPaid;
+    private LocalDate dateMade;
     
-    public Booking(int bookingID, int customerID, int roomNo, 
-        LocalDate checkInDate, LocalDate checkOutDate, boolean depositPaid) {
+    public Booking(int bookingID, int customerID, int roomNo, LocalDate checkInDate, LocalDate checkOutDate, boolean depositPaid, LocalDate dateMade) {
         this.bookingID = bookingID;
         this.customerID = customerID;
         this.roomNo = roomNo;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
         this.depositPaid = depositPaid;
+        this.dateMade = dateMade;
     }
 
     public int getBookingID() {
@@ -39,10 +40,15 @@ public class Booking {
     public LocalDate getCheckOutDate() {
         return checkOutDate;
     }
-
+    
     public boolean isDepositPaid() {
         return depositPaid;
     }
+
+    public LocalDate getDateMade() {
+        return dateMade;
+    }
+    
 
     public void setBookingID(int bookingID) {
         this.bookingID = bookingID;
@@ -67,7 +73,12 @@ public class Booking {
     public void setDepositPaid(boolean depositPaid) {
         this.depositPaid = depositPaid;
     }
-    
+
+    public void setDateMade(LocalDate dateMade) {
+        this.dateMade = dateMade;
+    }
+
+ 
 
     // Helper methods
     public int getNumberOfNights() {

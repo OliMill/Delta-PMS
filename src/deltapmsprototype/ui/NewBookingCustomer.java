@@ -256,6 +256,7 @@ public class NewBookingCustomer extends javax.swing.JPanel {
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {
         if (selectedRoomRow >= 0 && selectedRoomRow < currentAvailableRooms.size()) {
             Room selectedRoom = currentAvailableRooms.get(selectedRoomRow);
+
             // Get selected dates
             LocalDate checkIn = convertDate(dateCalendar.getDate());
             LocalDate checkOut = convertDate(dateCalendar2.getDate());
@@ -269,11 +270,139 @@ public class NewBookingCustomer extends javax.swing.JPanel {
                 return;
             }
 
-            // Store booking in session
-            deltapms.session.BookingSession.startNewBooking(selectedRoom, checkIn, checkOut);
+            // Calculate number of nights
+            long nights = java.time.temporal.ChronoUnit.DAYS.between(checkIn, checkOut);
 
-            // Navigate to confirmation panel
-            MainApplication.showPanel("ConfirmNewBookingCustomer");
+            // Get current user ID from UserSession
+            int customerId = deltapms.session.UserSession.getUserId();
+
+            // Get room number
+            int roomNo = selectedRoom.getRoomNo();
+
+            // Get room type name for display
+            RoomType roomType = getRoomTypeById(selectedRoom.getRoomTypeID());
+            String roomTypeName = roomType != null ? getRoomTypeName(roomType) : "Unknown";
+
+            // Get current date for DateMade
+            LocalDate dateMade = LocalDate.now();
+
+            // Show confirmation dialog with ALL booking details
+            int confirm = JOptionPane.showConfirmDialog(this,
+                    String.format("""
+                              CONFIRM BOOKING DETAILS
+                              
+                              ROOM INFORMATION:
+                                Room Number: %d
+                                Room Type: %s
+                              
+                              STAY INFORMATION:
+                                Check-in Date: %s
+                                Check-out Date: %s
+                                Duration: %d night%s
+                              
+                              BOOKING INFORMATION:
+                                Booking Date: %s
+                                Customer ID: %d
+                                Deposit Status: Not Paid
+                              
+                              Please confirm all details are correct.""",
+                            roomNo,
+                            roomTypeName,
+                            checkIn.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy")),
+                            checkOut.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy")),
+                            nights,
+                            nights != 1 ? "s" : "",
+                            dateMade.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy")),
+                            customerId
+                    ),
+                    "Confirm Booking",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+
+            if (confirm == JOptionPane.YES_OPTION) {
+                // Note: Price parameter is placeholder for future implementation
+                double totalPrice = 0.0;
+
+                // Save booking to database
+                boolean success = DataManager.createBooking(
+                        customerId,
+                        roomNo,
+                        checkIn,
+                        checkOut,
+                        totalPrice
+                );
+
+                if (success) {
+                    JOptionPane.showMessageDialog(this,
+                            String.format("""
+                                      BOOKING CONFIRMED SUCCESSFULLY!
+                                      
+                                      BOOKING SUMMARY:
+                                        Booking Reference: Customer ID %d
+                                        Booking Date: %s
+                                      
+                                      ROOM DETAILS:
+                                        Room Number: %d
+                                        Room Type: %s
+                                      
+                                      STAY DETAILS:
+                                        Check-in: %s
+                                        Check-out: %s
+                                        Duration: %d night%s
+                                      
+                                      PAYMENT STATUS:
+                                        Deposit: Not Paid (to be paid at check-in)
+                                      
+                                      Thank you for your booking!
+                                      A confirmation has been saved to our system.""",
+                                    customerId,
+                                    dateMade.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy")),
+                                    roomNo,
+                                    roomTypeName,
+                                    checkIn.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy")),
+                                    checkOut.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy")),
+                                    nights,
+                                    nights != 1 ? "s" : ""
+                            ),
+                            "Booking Successful",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                    // Clear selection and table
+                    selectedRoomRow = -1;
+                    jButton4.setEnabled(false);
+                    jTable1.clearSelection();
+
+                    // Clear the table
+                    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                    model.setRowCount(0);
+                    currentAvailableRooms.clear();
+
+                    // Optional: Reset date buttons to defaults
+                    jButton2.setText("Select Date: " + DATE_FORMAT.format(new java.util.Date()));
+                    Date tomorrow = new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000);
+                    jButton3.setText("Select Date: " + DATE_FORMAT.format(tomorrow));
+
+                    // Optional: Reset filters to defaults
+                    jSpinner1.setValue(1);
+                    jSpinner2.setValue(1);
+
+                    // Optional: Go back to user dashboard or stay on page
+                    // MainApplication.showPanel("UserSystem");
+                } else {
+                    JOptionPane.showMessageDialog(this, """
+                                                        BOOKING FAILED
+                                                        
+                                                        Failed to create booking. Possible reasons:
+                                                        \u2022 Database connection issue
+                                                        \u2022 Room no longer available
+                                                        \u2022 System error
+                                                        
+                                                        Please try again or contact support.""",
+                            "Booking Failed",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+            }
+
         } else {
             JOptionPane.showMessageDialog(this,
                     "Please select a room from the table first.",
@@ -440,6 +569,11 @@ public class NewBookingCustomer extends javax.swing.JPanel {
         jButton3.setActionCommand("Select Date");
 
         jButton4.setText("Confirm Selected Room");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
         jPanel20.setLayout(jPanel20Layout);
@@ -524,6 +658,10 @@ public class NewBookingCustomer extends javax.swing.JPanel {
 
         add(jPanel2, "card2");
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

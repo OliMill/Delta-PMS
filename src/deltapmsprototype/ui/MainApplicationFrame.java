@@ -24,7 +24,6 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         cl = (CardLayout) getContentPane().getLayout();
         
         panels.put("UserSystem", new UserSystem(this));
-        panels.put("ConfirmNewBookingCustomer", new ConfirmNewBookingCustomer(this));
         panels.put("NewBookingCustomer", new NewBookingCustomer(this));
         for(Map.Entry<String, JPanel> entry: panels.entrySet())
             getContentPane().add(entry.getValue(),entry.getKey());
@@ -108,7 +107,13 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextField1.setText("james.w@email.com");
         jTextField1.setBorder(javax.swing.BorderFactory.createTitledBorder("Email"));
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
@@ -119,6 +124,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         jPanel3.add(jTextField1, gridBagConstraints);
 
         jPasswordField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jPasswordField1.setText("cust_hash_1");
         jPasswordField1.setToolTipText("");
         jPasswordField1.setBorder(javax.swing.BorderFactory.createTitledBorder("Password"));
         jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
@@ -277,6 +283,10 @@ public class MainApplicationFrame extends javax.swing.JFrame {
                 JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
 
     
     
