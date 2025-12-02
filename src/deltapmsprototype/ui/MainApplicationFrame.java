@@ -267,18 +267,6 @@ public class MainApplicationFrame extends javax.swing.JFrame {
                 "\nRole: " + deltapms.session.UserSession.getUserRole(),
                 "Login Success",
                 JOptionPane.INFORMATION_MESSAGE);
-
-        // Debug: print session info to console
-        System.out.println("=== USER SESSION STARTED ===");
-        System.out.println("Name: " + deltapms.session.UserSession.getUserName());
-        System.out.println("Role: " + deltapms.session.UserSession.getUserRole());
-        System.out.println("Email: " + deltapms.session.UserSession.getUserEmail());
-        System.out.println("ID: " + deltapms.session.UserSession.getUserId());
-        System.out.println("Is Customer: " + deltapms.session.UserSession.isCustomer());
-        System.out.println("Is Staff: " + deltapms.session.UserSession.isStaff());
-        System.out.println("Is Manager: " + deltapms.session.UserSession.isManager());
-        System.out.println("============================");
-
         // Navigate to appropriate panel based on user role
         showPanel("UserSystem");
     } else {

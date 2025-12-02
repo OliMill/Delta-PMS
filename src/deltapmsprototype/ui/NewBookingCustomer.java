@@ -256,7 +256,6 @@ public class NewBookingCustomer extends javax.swing.JPanel {
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {
         if (selectedRoomRow >= 0 && selectedRoomRow < currentAvailableRooms.size()) {
             Room selectedRoom = currentAvailableRooms.get(selectedRoomRow);
-
             // Get selected dates
             LocalDate checkIn = convertDate(dateCalendar.getDate());
             LocalDate checkOut = convertDate(dateCalendar2.getDate());

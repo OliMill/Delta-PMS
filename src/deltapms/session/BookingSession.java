@@ -1,4 +1,3 @@
-// BookingSession.java in deltapms.session package
 package deltapms.session;
 
 import com.hotelmanagement.models.Room;
