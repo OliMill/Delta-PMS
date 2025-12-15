@@ -57,8 +57,7 @@ public class NewBookingCustomer extends javax.swing.JPanel {
             }
         });
 
-        // Check if user is logged in (moved to when panel is actually used)
-        // We'll check when the user tries to search instead
+        // Check if user is logged in
         // CALENDAR INITIALIZATION LOGIC START
         dateCalendar = new com.toedter.calendar.JCalendar();
         calendarPopup = new javax.swing.JPopupMenu();
@@ -381,17 +380,17 @@ public class NewBookingCustomer extends javax.swing.JPanel {
                     model.setRowCount(0);
                     currentAvailableRooms.clear();
 
-                    // Optional: Reset date buttons to defaults
+                    // Reset date buttons to defaults
                     jButton2.setText("Select Date: " + DATE_FORMAT.format(new java.util.Date()));
                     Date tomorrow = new Date(System.currentTimeMillis() + 24 * 60 * 60 * 1000);
                     jButton3.setText("Select Date: " + DATE_FORMAT.format(tomorrow));
 
-                    // Optional: Reset filters to defaults
+                    //Reset filters to defaults
                     jSpinner1.setValue(1);
                     jSpinner2.setValue(1);
 
-                    // Optional: Go back to user dashboard or stay on page
-                    // MainApplication.showPanel("UserSystem");
+                    //Go back to user dashboard or stay on page
+                    MainApplication.showPanel("UserSystem");
                 } else {
                     JOptionPane.showMessageDialog(this, """
                                                         BOOKING FAILED
