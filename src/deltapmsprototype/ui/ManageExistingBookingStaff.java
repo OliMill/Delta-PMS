@@ -134,9 +134,42 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
         String guestName = customerNameMap.getOrDefault(booking.getCustomerID(), "Unknown");
 
         JPopupMenu popup = new JPopupMenu();
-        popup.add(new JMenuItem("Edit Booking for " + guestName));
-        popup.add(new JMenuItem("Cancel Booking (ID: " + booking.getBookingID() + ")"));
+
+        // --- 1. EDIT ITEM ---
+        JMenuItem editItem = new JMenuItem("Edit Booking for " + guestName);
+        editItem.addActionListener(event -> {
+          
+            // TO DO  MainApplication1.showEditBookingPanel(booking);
+        });
+
+        // --- 2. CANCEL ITEM ---
+        JMenuItem cancelItem = new JMenuItem("Cancel Booking (ID: " + booking.getBookingID() + ")");
+        cancelItem.addActionListener(event -> {
+            handleCancelBooking(booking, guestName);
+        });
+
+        popup.add(editItem);
+        popup.add(cancelItem);
         popup.show(e.getComponent(), e.getX(), e.getY());
+    }
+
+    private void handleCancelBooking(Booking booking, String guestName) {
+        // Show a confirmation dialog
+        int response = javax.swing.JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to cancel the booking for " + guestName + "?",
+                "Confirm Cancellation",
+                javax.swing.JOptionPane.YES_NO_OPTION);
+
+        if (response == javax.swing.JOptionPane.YES_OPTION) {
+
+            DataManager.deleteBooking(booking.getBookingID());
+            DataManager.loadDataFromDatabase();
+
+            // Refresh the table model with the new list from DataManager
+            setupCustomTable();
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Booking Cancelled.");
+        }
     }
 
     /**

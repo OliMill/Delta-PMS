@@ -167,6 +167,21 @@ public class DataManager {
             return false;
         }
     }
+    
+    public static boolean deleteBooking(int bookingID) {
+    String sql = "DELETE FROM Booking WHERE BookingID = ?";
+    try (Connection conn = DatabaseConnection.getConnection(); 
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        
+        pstmt.setInt(1, bookingID);
+        int affectedRows = pstmt.executeUpdate();
+        return affectedRows > 0;
+        
+    } catch (SQLException e) {
+        e.printStackTrace();
+        return false;
+    }
+}
 
     // Getters
     public static List<Customer> getCustomers() {
