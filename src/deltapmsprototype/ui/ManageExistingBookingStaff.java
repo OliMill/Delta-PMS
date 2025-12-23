@@ -1,18 +1,14 @@
 package deltapmsprototype.ui;
 
-import com.hotelmanagement.dao.DataManager;
 import com.hotelmanagement.models.Booking;
 import com.hotelmanagement.models.Customer;
-import com.hotelmanagement.models.Room;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -22,6 +18,12 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
+import com.hotelmanagement.dao.DataManager;
+import com.hotelmanagement.models.Room;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.List;
+
 
 /**
  *
@@ -34,6 +36,8 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
     // Maps Customer ID -> Full Name (for quick lookup in the table)
     private Map<Integer, String> customerNameMap;
     private LocalDate startDateDisplay;
+    
+    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     public ManageExistingBookingStaff(MainApplicationFrame MainApplication) {
         initComponents();
@@ -47,28 +51,61 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
 
         // 3. Setup Table
         setupCustomTable();
+
+        // CALENDAR INITIALIZATION LOGIC START
+        dateCalendar = new com.toedter.calendar.JCalendar();
+        calendarPopup = new javax.swing.JPopupMenu();
+
+        // 1. Add the JCalendar to the JPopupMenu
+        calendarPopup.add(dateCalendar);
+
+        // Set initial button text to today's date
+        jButton2.setText("Select Date: " +  DATE_FORMAT.format(new java.util.Date()));
+
+        // 2. Add the listener to handle date selection
+        dateCalendar.addPropertyChangeListener("day", (java.beans.PropertyChangeEvent evt) -> {
+            // This block only runs when a specific DAY is clicked
+            java.util.Date selectedDate = dateCalendar.getDate();
+
+            if (selectedDate != null) {
+                // 1. Update the button's text
+                jButton2.setText("Selected Date: " + DATE_FORMAT.format(selectedDate));
+
+                // 3. Hide the popup now that a final selection is made
+                calendarPopup.setVisible(false);
+
+                // 4. Refresh your table to show the new dates
+                setupCustomTable();
+            }
+        });
     }
 
     private void cacheCustomerNames() {
-        customerNameMap = new HashMap<>();
-        for (Customer c : DataManager.getCustomers()) {
-            customerNameMap.put(c.getCustomerID(), c.getFirstName() + " " + c.getLastName());
-        }
+    customerNameMap = new HashMap<>();
+    for (Customer c : DataManager.getCustomers()) {
+        customerNameMap.put(c.getCustomerID(), c.getFirstName() + " " + c.getLastName());
     }
+}
 
     private void setupCustomTable() {
-        // Set start date 
-        startDateDisplay = LocalDate.now();
+    // Set start date and convert to local date
+    // 1. Ensure the start date is initialized
+    if (startDateDisplay == null) {
+        startDateDisplay = LocalDate.now(); 
+    } else {
+        startDateDisplay = dateCalendar.getDate().toInstant()
+                                 .atZone(java.time.ZoneId.systemDefault())
+                                 .toLocalDate();
+    }
+    // Apply Model using DataManager lists
+    List<Room> rooms = DataManager.getRooms();
+    List<Booking> bookings = DataManager.getBookings();
 
-        // Apply Model using DataManager lists
-        List<Room> rooms = DataManager.getRooms();
-        List<Booking> bookings = DataManager.getBookings();
+    
+    BookingTableModel model = new BookingTableModel(rooms, bookings, startDateDisplay, jSlider1.getValue());
+    jTable1.setModel(model);
 
-        // Display 14 days
-        BookingTableModel model = new BookingTableModel(rooms, bookings, startDateDisplay, 14);
-        jTable1.setModel(model);
-
-        // Apply Renderer
+    // Apply Renderer
         jTable1.setDefaultRenderer(Object.class, new BookingRenderer());
 
         // Formatting
@@ -110,11 +147,16 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel20 = new javax.swing.JPanel();
+        jSlider1 = new javax.swing.JSlider();
+        jLabel2 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jPanel10 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -142,17 +184,70 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
 
         jPanel20.setBorder(javax.swing.BorderFactory.createMatteBorder(1, 1, 1, 1, new java.awt.Color(242, 68, 29)));
         jPanel20.setPreferredSize(new java.awt.Dimension(184, 2));
-
-        javax.swing.GroupLayout jPanel20Layout = new javax.swing.GroupLayout(jPanel20);
+        java.awt.GridBagLayout jPanel20Layout = new java.awt.GridBagLayout();
+        jPanel20Layout.columnWidths = new int[] {0, 30, 0, 30, 0, 30, 0, 30, 0};
+        jPanel20Layout.rowHeights = new int[] {0, 10, 0};
         jPanel20.setLayout(jPanel20Layout);
-        jPanel20Layout.setHorizontalGroup(
-            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1225, Short.MAX_VALUE)
-        );
-        jPanel20Layout.setVerticalGroup(
-            jPanel20Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 74, Short.MAX_VALUE)
-        );
+
+        jSlider1.setMajorTickSpacing(7);
+        jSlider1.setMaximum(56);
+        jSlider1.setPaintLabels(true);
+        jSlider1.setPaintTicks(true);
+        jSlider1.setSnapToTicks(true);
+        jSlider1.setToolTipText("Viewing Period");
+        jSlider1.setValue(14);
+        jSlider1.setMajorTickSpacing(7);
+        jSlider1.setMinorTickSpacing(1);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.5;
+        jPanel20.add(jSlider1, gridBagConstraints);
+
+        jLabel2.setText("Viewing Period");
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 0.5;
+        jPanel20.add(jLabel2, gridBagConstraints);
+
+        jButton1.setText("jButton1");
+        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton1MouseClicked(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridwidth = 5;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 1.0;
+        jPanel20.add(jButton1, gridBagConstraints);
+
+        jButton2.setText("jButton2");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 3;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 0.5;
+        gridBagConstraints.weighty = 1.0;
+        jPanel20.add(jButton2, gridBagConstraints);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -183,7 +278,7 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel10, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(jPanel20, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1227, Short.MAX_VALUE)
+            .addComponent(jPanel20, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 1229, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -209,17 +304,34 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        int x = 0;
+        int y = jButton2.getHeight();
+        // Show the popup relative to jButton2
+        calendarPopup.show(jButton2, x, y);
+    }//GEN-LAST:event_jButton2MouseClicked
+
+    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
+        setupCustomTable();
+    }//GEN-LAST:event_jButton1MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel20;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSlider jSlider1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
-
+    private com.toedter.calendar.JCalendar dateCalendar;
+    private javax.swing.JPopupMenu calendarPopup;
+    
     // CUSTOM TABLE MODEL
     class BookingTableModel extends AbstractTableModel {
 
@@ -263,7 +375,7 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
 
             // Col 0: Room Number
             if (columnIndex == 0) {
-                return "RM " + room.getRoomNo();
+                return String.valueOf(room.getRoomNo());
             }
 
             // Col 1+: Dates
