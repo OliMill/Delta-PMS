@@ -25,6 +25,10 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         
         panels.put("UserSystem", new UserSystem(this));
         panels.put("NewBookingCustomer", new NewBookingCustomer(this));
+        panels.put("StaffSystem", new StaffSystem(this));
+        panels.put("ManageBookingsStaff", new ManageBookingsStaff(this));
+        panels.put("ManageExistingBookingStaff", new ManageExistingBookingStaff(this));
+                
         for(Map.Entry<String, JPanel> entry: panels.entrySet())
             getContentPane().add(entry.getValue(),entry.getKey());
     }
@@ -107,7 +111,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField1.setText("james.w@email.com");
+        jTextField1.setText("john.smith@hotel.com");
         jTextField1.setBorder(javax.swing.BorderFactory.createTitledBorder("Email"));
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -124,7 +128,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         jPanel3.add(jTextField1, gridBagConstraints);
 
         jPasswordField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jPasswordField1.setText("cust_hash_1");
+        jPasswordField1.setText("hashed_pass_1");
         jPasswordField1.setToolTipText("");
         jPasswordField1.setBorder(javax.swing.BorderFactory.createTitledBorder("Password"));
         jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
@@ -196,9 +200,9 @@ public class MainApplicationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-   String email = jTextField1.getText().trim();
+    String email = jTextField1.getText().trim();
     String password = new String(jPasswordField1.getPassword());
-
+    boolean isStaff = false;
     // Validate input
     if (email.isEmpty() || password.isEmpty()) {
         JOptionPane.showMessageDialog(this,
@@ -244,6 +248,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
             if (staffMember.getEmail().equalsIgnoreCase(email)) {
                 if (staffMember.getPasswordHash().equals(password)) {
                     // Set up user session
+                    isStaff = true;
                     deltapms.session.UserSession.login(
                         staffMember.getFirstName() + " " + staffMember.getLastName(),
                         staffMember.getRole(),
@@ -274,7 +279,12 @@ public class MainApplicationFrame extends javax.swing.JFrame {
                 "Login Success",
                 JOptionPane.INFORMATION_MESSAGE);
         // Navigate to appropriate panel based on user role
-        showPanel("UserSystem");
+        if (isStaff){
+            showPanel("StaffSystem");
+        } else {
+            showPanel("UserSystem");
+        }
+        
     } else {
         // No user found with this email
         JOptionPane.showMessageDialog(this,
