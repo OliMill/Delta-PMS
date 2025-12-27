@@ -7,11 +7,12 @@ import deltapms.session.UserSession;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import com.hotelmanagement.models.Customer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NewBookingCustomer extends javax.swing.JPanel {
 
@@ -23,7 +24,8 @@ public class NewBookingCustomer extends javax.swing.JPanel {
     private com.toedter.calendar.JCalendar dateCalendar2;
     private javax.swing.JPopupMenu calendarPopup2;
     private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
-
+    int finalSelectedId = -1;
+    
     public NewBookingCustomer(MainApplicationFrame MainApplication) {
         initComponents();
         this.MainApplication = MainApplication;
@@ -255,6 +257,7 @@ public class NewBookingCustomer extends javax.swing.JPanel {
     }
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {
+        int customerId = -1;
         if (selectedRoomRow >= 0 && selectedRoomRow < currentAvailableRooms.size()) {
             Room selectedRoom = currentAvailableRooms.get(selectedRoomRow);
 
@@ -274,9 +277,6 @@ public class NewBookingCustomer extends javax.swing.JPanel {
             // Calculate number of nights
             long nights = java.time.temporal.ChronoUnit.DAYS.between(checkIn, checkOut);
 
-            // Get current user ID from UserSession
-            int customerId = deltapms.session.UserSession.getUserId();
-
             // Get room number
             int roomNo = selectedRoom.getRoomNo();
 
@@ -287,42 +287,95 @@ public class NewBookingCustomer extends javax.swing.JPanel {
             // Get current date for DateMade
             LocalDate dateMade = LocalDate.now();
 
+            // Calculate price based on room capacity
+            double pricePerNight = 50.0;
+            if (roomType != null) {
+                // Using standard math based on bed counts from your RoomType class
+                pricePerNight += (roomType.getDoubleBeds() * 40.0) + (roomType.getSingleBeds() * 20.0);
+            }
+            double totalPrice = pricePerNight * nights;
+
+            //if current user is member of staff confirm which user theyre booking for:
+            if ("Staff".equals(deltapms.session.UserSession.getUserRole()) || "Manager".equals(deltapms.session.UserSession.getUserRole())) {
+
+                String searchName = JOptionPane.showInputDialog(this, "Enter Customer First or Last Name:");
+
+                if (searchName != null && !searchName.trim().isEmpty()) {
+                    String query = searchName.toLowerCase();
+                    List<Customer> foundCustomers = new ArrayList<>();
+
+                    for (Customer c : DataManager.getCustomers()) {
+                        if (c.getFirstName().toLowerCase().contains(query) || c.getLastName().toLowerCase().contains(query)) {
+                            foundCustomers.add(c);
+                        }
+                    }
+
+                    if (foundCustomers.isEmpty()) {
+                        JOptionPane.showMessageDialog(this, "No users found.");
+                        return;
+                    } else {
+                        Object[] names = new Object[foundCustomers.size()];
+                        for (int i = 0; i < foundCustomers.size(); i++) {
+                            Customer c = foundCustomers.get(i);
+                            names[i] = c.getCustomerID() + ": " + c.getFirstName() + " " + c.getLastName();
+                        }
+
+                        Object selection = JOptionPane.showInputDialog(this, "Select User:", "Confirm",
+                                JOptionPane.QUESTION_MESSAGE, null, names, names[0]);
+
+                        if (selection != null) {
+                            // Extract just the ID from the String "123: John Doe"
+                            String selectedString = (String) selection;
+                            String idPart = selectedString.split(":")[0];
+                            customerId = Integer.parseInt(idPart);
+
+                        } else {
+                            return;
+                        }
+                    }
+                } else {
+                    return;
+                }
+            } else {
+                //Get current user ID from UserSession
+                customerId = deltapms.session.UserSession.getUserId();
+
+            }
+
             // Show confirmation dialog with ALL booking details
-            int confirm = JOptionPane.showConfirmDialog(this,
+            int confirm;
+            confirm = JOptionPane.showConfirmDialog(this,
                     String.format("""
-                              CONFIRM BOOKING DETAILS
-                              
-                              ROOM INFORMATION:
-                                Room Number: %d
-                                Room Type: %s
-                              
-                              STAY INFORMATION:
-                                Check-in Date: %s
-                                Check-out Date: %s
-                                Duration: %d night%s
-                              
-                              BOOKING INFORMATION:
-                                Booking Date: %s
-                                Customer ID: %d
-                                Deposit Status: Not Paid
-                              
-                              Please confirm all details are correct.""",
+                                                            CONFIRM BOOKING DETAILS
+                                                                                                                    ROOM INFORMATION:
+                                                              Room Number: %d
+                                                              Room Type: %s
+                                                                                                                    STAY INFORMATION:
+                                                              Check-in Date: %s
+                                                              Check-out Date: %s
+                                                              Duration: %d night%s
+                                                                                                                    PRICE INFORMATION:
+                                                              Total Price: £%.2f
+                                                                                                                    BOOKING INFORMATION:
+                                                              Booking Date: %s
+                                                              Customer ID: %d
+                                                              Deposit Status: Not Paid
+                                                                                                                    Please confirm all details are correct.""",
                             roomNo,
                             roomTypeName,
                             checkIn.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy")),
                             checkOut.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy")),
                             nights,
                             nights != 1 ? "s" : "",
+                            totalPrice,
                             dateMade.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy")),
                             customerId
                     ),
                     "Confirm Booking",
-                    JOptionPane.YES_NO_OPTION,
-                    JOptionPane.QUESTION_MESSAGE);
+                    JOptionPane.YES_NO_OPTION);
 
             if (confirm == JOptionPane.YES_OPTION) {
                 // Note: Price parameter is placeholder for future implementation
-                double totalPrice = 0.0;
 
                 // Save booking to database
                 boolean success = DataManager.createBooking(
@@ -336,27 +389,29 @@ public class NewBookingCustomer extends javax.swing.JPanel {
                 if (success) {
                     JOptionPane.showMessageDialog(this,
                             String.format("""
-                                      BOOKING CONFIRMED SUCCESSFULLY!
-                                      
-                                      BOOKING SUMMARY:
-                                        Booking Reference: Customer ID %d
-                                        Booking Date: %s
-                                      
-                                      ROOM DETAILS:
-                                        Room Number: %d
-                                        Room Type: %s
-                                      
-                                      STAY DETAILS:
-                                        Check-in: %s
-                                        Check-out: %s
-                                        Duration: %d night%s
-                                      
-                                      PAYMENT STATUS:
-                                        Deposit: Not Paid (to be paid at check-in)
-                                      
-                                      Thank you for your booking!
-                                      A confirmation has been saved to our system.""",
+                                          BOOKING CONFIRMED SUCCESSFULLY!
+                                          
+                                          BOOKING SUMMARY:
+                                            Booking Reference: Customer ID %d
+                                            Total Price: £%.2f
+                                            Booking Date: %s
+                                          
+                                          ROOM DETAILS:
+                                            Room Number: %d
+                                            Room Type: %s
+                                          
+                                          STAY DETAILS:
+                                            Check-in: %s
+                                            Check-out: %s
+                                            Duration: %d night%s
+                                          
+                                          PAYMENT STATUS:
+                                            Deposit: Not Paid (to be paid at check-in)
+                                          
+                                          Thank you for your booking!
+                                          A confirmation has been saved to our system.""",
                                     customerId,
+                                    totalPrice,
                                     dateMade.format(java.time.format.DateTimeFormatter.ofPattern("dd MMM yyyy")),
                                     roomNo,
                                     roomTypeName,
@@ -388,17 +443,26 @@ public class NewBookingCustomer extends javax.swing.JPanel {
                     jSpinner2.setValue(1);
 
                     //Go back to user dashboard or stay on page
-                    MainApplication.showPanel("UserSystem");
+                    if ("Customer".equals(deltapms.session.UserSession.getUserRole())){
+                        MainApplication.showPanel("UserSystem");
+                    }
+                    if ("Staff".equals(deltapms.session.UserSession.getUserRole())){
+                        MainApplication.showPanel("StaffSystem");
+                    }
+                    if ("Manager".equals(deltapms.session.UserSession.getUserRole())){
+                        // TO DO CHANGE TO MANAGER SYSTEM
+                        MainApplication.showPanel("StaffSystem");
+                    }
                 } else {
                     JOptionPane.showMessageDialog(this, """
-                                                        BOOKING FAILED
-                                                        
-                                                        Failed to create booking. Possible reasons:
-                                                        \u2022 Database connection issue
-                                                        \u2022 Room no longer available
-                                                        \u2022 System error
-                                                        
-                                                        Please try again or contact support.""",
+                                                            BOOKING FAILED
+                                                            
+                                                            Failed to create booking. Possible reasons:
+                                                            \u2022 Database connection issue
+                                                            \u2022 Room no longer available
+                                                            \u2022 System error
+                                                            
+                                                            Please try again or contact support.""",
                             "Booking Failed",
                             JOptionPane.ERROR_MESSAGE);
                 }

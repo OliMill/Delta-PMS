@@ -24,11 +24,6 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
 
-
-/**
- *
- * @author Oli
- */
 public class ManageExistingBookingStaff extends javax.swing.JPanel {
 
     private final MainApplicationFrame MainApplication1;
@@ -135,20 +130,12 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
 
         JPopupMenu popup = new JPopupMenu();
 
-        // --- 1. EDIT ITEM ---
-        JMenuItem editItem = new JMenuItem("Edit Booking for " + guestName);
-        editItem.addActionListener(event -> {
-          
-            // TO DO  MainApplication1.showEditBookingPanel(booking);
-        });
-
-        // --- 2. CANCEL ITEM ---
+        // --- 1. CANCEL ITEM ---
         JMenuItem cancelItem = new JMenuItem("Cancel Booking (ID: " + booking.getBookingID() + ")");
         cancelItem.addActionListener(event -> {
             handleCancelBooking(booking, guestName);
         });
 
-        popup.add(editItem);
         popup.add(cancelItem);
         popup.show(e.getComponent(), e.getX(), e.getY());
     }

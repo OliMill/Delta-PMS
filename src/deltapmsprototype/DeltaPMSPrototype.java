@@ -26,7 +26,6 @@ public class DeltaPMSPrototype {
             java.awt.EventQueue.invokeLater(() -> {
                 new MainApplicationFrame().setVisible(true);
             });
-            System.out.print(DataManager.getAvailableRooms(LocalDate.parse("2025-12-01"), LocalDate.parse("2025-12-02")));
 
         } catch (Exception e) {
             // If any error occurs during connection or loading
