@@ -53,7 +53,6 @@ public class DataManager {
                         rs.getString("LastName"),
                         rs.getDate("DOB").toLocalDate(),
                         rs.getString("Email"),
-                        rs.getString("Username"),
                         rs.getString("PasswordHash"),
                         role
                 );
@@ -77,7 +76,6 @@ public class DataManager {
                         rs.getString("LastName"),
                         rs.getDate("DOB").toLocalDate(),
                         rs.getString("Email"),
-                        rs.getString("Username"),
                         rs.getString("PasswordHash")
                 );
                 customers.add(c);

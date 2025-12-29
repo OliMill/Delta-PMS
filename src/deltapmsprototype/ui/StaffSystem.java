@@ -35,7 +35,6 @@ public class StaffSystem extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(89, 4, 20));
         jPanel1.setForeground(new java.awt.Color(89, 4, 20));
@@ -79,20 +78,16 @@ public class StaffSystem extends javax.swing.JPanel {
 
         jButton2.setText("Manage customers");
         jButton2.setPreferredSize(new java.awt.Dimension(160, 60));
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         jPanel2.add(jButton2, gridBagConstraints);
-
-        jButton3.setText("Send Communications");
-        jButton3.setMaximumSize(new java.awt.Dimension(135, 27));
-        jButton3.setMinimumSize(new java.awt.Dimension(135, 27));
-        jButton3.setPreferredSize(new java.awt.Dimension(160, 60));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 0;
-        jPanel2.add(jButton3, gridBagConstraints);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -115,11 +110,15 @@ public class StaffSystem extends javax.swing.JPanel {
         MainApplication1.showPanel("ManageBookingsStaff");
     }//GEN-LAST:event_jButton1MouseClicked
 
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        // TODO add your handling code here:
+        MainApplication1.showPanel("ManageCustomersStaff");
+    }//GEN-LAST:event_jButton2MouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;

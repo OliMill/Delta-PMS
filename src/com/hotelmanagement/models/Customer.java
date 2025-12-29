@@ -8,17 +8,15 @@ public class Customer {
     private String lastName;
     private LocalDate dob;
     private String email;
-    private String username;
     private String passwordHash;
 
     public Customer(int customerID, String firstName, String lastName, LocalDate dob,
-    String email, String username, String passwordHash) {
+    String email,String passwordHash) {
         this.customerID = customerID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;
         this.email = email;
-        this.username = username;
         this.passwordHash = passwordHash;
     }
 
@@ -40,10 +38,6 @@ public class Customer {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public String getPasswordHash() {
@@ -69,11 +63,7 @@ public class Customer {
     public void setEmail(String email) {
         this.email = email;
     }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
+    
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }

@@ -22,13 +22,14 @@ public class MainApplicationFrame extends javax.swing.JFrame {
     }
     private void initPanels(){
         cl = (CardLayout) getContentPane().getLayout();
-        
+        //initialise all my panels
         panels.put("UserSystem", new UserSystem(this));
         panels.put("NewBookingCustomer", new NewBookingCustomer(this));
         panels.put("StaffSystem", new StaffSystem(this));
         panels.put("ManageBookingsStaff", new ManageBookingsStaff(this));
         panels.put("ManageExistingBookingStaff", new ManageExistingBookingStaff(this));
-                
+        panels.put("ManageCustomersStaff", new ManageCustomersStaff(this));
+        panels.put("AlterCustomerDetailsStaff", new AlterCustomerDetailsStaff(this));        
         for(Map.Entry<String, JPanel> entry: panels.entrySet())
             getContentPane().add(entry.getValue(),entry.getKey());
     }

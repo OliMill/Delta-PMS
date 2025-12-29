@@ -8,18 +8,16 @@ public class Staff {
     private String lastName;
     private LocalDate dob;
     private String email;
-    private String username;
     private String passwordHash;
     private String job;
     
     public Staff(int staffID, String firstName, String lastName, LocalDate dob, 
-                 String email, String username, String passwordHash, String job) {
+                 String email, String passwordHash, String job) {
         this.staffID = staffID;
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;
         this.email = email;
-        this.username = username;
         this.passwordHash = passwordHash;
         this.job = job;
     }
@@ -42,10 +40,6 @@ public class Staff {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public String getPasswordHash() {
@@ -74,10 +68,6 @@ public class Staff {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public void setPasswordHash(String passwordHash) {

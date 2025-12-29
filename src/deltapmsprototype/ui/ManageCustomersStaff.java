@@ -8,17 +8,16 @@ package deltapmsprototype.ui;
  *
  * @author Oli
  */
-public class ManageBookingsStaff extends javax.swing.JPanel {
+public class ManageCustomersStaff extends javax.swing.JPanel {
 
     /**
-     * Creates new form ManageBookingsStaff
+     * Creates new form ManageCustomersStaff
      */
     private final MainApplicationFrame MainApplication1;
-    public ManageBookingsStaff(MainApplicationFrame MainApplication) {
+    public ManageCustomersStaff(MainApplicationFrame MainApplication) {
         initComponents();
         MainApplication1 = MainApplication;
     }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -59,7 +58,7 @@ public class ManageBookingsStaff extends javax.swing.JPanel {
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
-        jButton1.setText("Manage Bookings");
+        jButton1.setText("Communicate Customers");
         jButton1.setToolTipText("");
         jButton1.setPreferredSize(new java.awt.Dimension(160, 60));
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -73,8 +72,13 @@ public class ManageBookingsStaff extends javax.swing.JPanel {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         jPanel2.add(jButton1, gridBagConstraints);
 
-        jButton2.setText("Create a Booking");
+        jButton2.setText("Alter Details");
         jButton2.setPreferredSize(new java.awt.Dimension(160, 60));
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -118,14 +122,18 @@ public class ManageBookingsStaff extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        MainApplication1.showPanel("NewBookingCustomer");
-    }//GEN-LAST:event_jButton2ActionPerformed
-
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
-        MainApplication1.showPanel("ManageExistingBookingStaff");
+        MainApplication1.showPanel("");
     }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        MainApplication1.showPanel("AlterCustomerDetailsStaff");
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
