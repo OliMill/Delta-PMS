@@ -11,16 +11,17 @@ import java.util.List;
 import javax.swing.JOptionPane;
 
 public class MainApplicationFrame extends javax.swing.JFrame {
-    
+
     private CardLayout cl;
-    private final Map<String,JPanel> panels;
-    
-    public MainApplicationFrame(){
+    private final Map<String, JPanel> panels;
+
+    public MainApplicationFrame() {
         this.panels = new HashMap<>();
         initComponents();
         initPanels();
     }
-    private void initPanels(){
+
+    private void initPanels() {
         cl = (CardLayout) getContentPane().getLayout();
         //initialise all my panels
         panels.put("UserSystem", new UserSystem(this));
@@ -29,12 +30,18 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         panels.put("ManageBookingsStaff", new ManageBookingsStaff(this));
         panels.put("ManageExistingBookingStaff", new ManageExistingBookingStaff(this));
         panels.put("ManageCustomersStaff", new ManageCustomersStaff(this));
-        panels.put("AlterCustomerDetailsStaff", new AlterCustomerDetailsStaff(this));       
-        panels.put("CommunicateCustomersStaff", new CommunicateCustomersStaff(this));     
-        for(Map.Entry<String, JPanel> entry: panels.entrySet())
-            getContentPane().add(entry.getValue(),entry.getKey());
+        panels.put("AlterCustomerDetailsStaff", new AlterCustomerDetailsStaff(this));
+        panels.put("CommunicateCustomersStaff", new CommunicateCustomersStaff(this));
+        panels.put("ManagerSystem", new ManagerSystem(this));
+        panels.put("ManageStaffManager", new ManageStaffManager(this));   
+        //panels.put("CommunicateCustomersStaff", new CommunicateCustomersStaff(this));   
+
+        for (Map.Entry<String, JPanel> entry : panels.entrySet()) {
+            getContentPane().add(entry.getValue(), entry.getKey());
+        }
     }
-    public void showPanel(String name){
+
+    public void showPanel(String name) {
         cl.show(getContentPane(), name);
         getContentPane().revalidate();
         getContentPane().repaint();
@@ -202,106 +209,113 @@ public class MainApplicationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-    String email = jTextField1.getText().trim();
-    String password = new String(jPasswordField1.getPassword());
-    boolean isStaff = false;
-    // Validate input
-    if (email.isEmpty() || password.isEmpty()) {
-        JOptionPane.showMessageDialog(this,
-                "Please enter both email and password.",
-                "Login Error",
-                JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-
-    // Get the loaded data from DataManager
-    List<Customer> customers = DataManager.getCustomers();
-    List<Staff> staff = DataManager.getStaff();
-
-    boolean loggedIn = false;
-
-    // 1. Check customers first
-    for (Customer customer : customers) {
-        if (customer.getEmail().equalsIgnoreCase(email)) {
-            // For prototyping purposes ignore hashing
-            if (customer.getPasswordHash().equals(password)) {
-                // Set up user session
-                deltapms.session.UserSession.login(
-                    customer.getFirstName() + " " + customer.getLastName(),
-                    "Customer",
-                    customer.getEmail(),
-                    customer.getCustomerID()
-                );
-                loggedIn = true;
-                break;
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Incorrect password for customer account.",
-                        "Login Error",
-                        JOptionPane.ERROR_MESSAGE);
-                return;
-            }
+        String email = jTextField1.getText().trim();
+        String password = new String(jPasswordField1.getPassword());
+        boolean isStaff = false;
+        boolean isManager = false;
+        // Validate input
+        if (email.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                    "Please enter both email and password.",
+                    "Login Error",
+                    JOptionPane.ERROR_MESSAGE);
+            return;
         }
-    }
 
-    // 2. If not a customer, check staff (includes Managers in list)
-    if (!loggedIn) {
-        for (Staff staffMember : staff) {
-            if (staffMember.getEmail().equalsIgnoreCase(email)) {
-                if (staffMember.getPasswordHash().equals(password)) {
+        // Get the loaded data from DataManager
+        List<Customer> customers = DataManager.getCustomers();
+        List<Staff> staff = DataManager.getStaff();
+
+        boolean loggedIn = false;
+
+        // 1. Check customers first
+        for (Customer customer : customers) {
+            if (customer.getEmail().equalsIgnoreCase(email)) {
+                // For prototyping purposes ignore hashing
+                if (customer.getPasswordHash().equals(password)) {
                     // Set up user session
-                    isStaff = true;
                     deltapms.session.UserSession.login(
-                        staffMember.getFirstName() + " " + staffMember.getLastName(),
-                        staffMember.getRole(),
-                        staffMember.getEmail(),
-                        staffMember.getStaffID()
+                            customer.getFirstName() + " " + customer.getLastName(),
+                            "Customer",
+                            customer.getEmail(),
+                            customer.getCustomerID()
                     );
                     loggedIn = true;
                     break;
                 } else {
                     JOptionPane.showMessageDialog(this,
-                            "Incorrect password for staff account.",
+                            "Incorrect password for customer account.",
                             "Login Error",
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
             }
         }
-    }
 
-    if (loggedIn) {
-        // Clear password field for security
-        jPasswordField1.setText("");
-        
-        // Show success message with user info
-        JOptionPane.showMessageDialog(this,
-                "Login successful!\nWelcome, " + deltapms.session.UserSession.getUserName() + 
-                "\nRole: " + deltapms.session.UserSession.getUserRole(),
-                "Login Success",
-                JOptionPane.INFORMATION_MESSAGE);
-        // Navigate to appropriate panel based on user role
-        if (isStaff){
-            showPanel("StaffSystem");
-        } else {
-            showPanel("UserSystem");
+        // 2. If not a customer, check staff (includes Managers in list)
+        if (!loggedIn) {
+            for (Staff staffMember : staff) {
+                if (staffMember.getEmail().equalsIgnoreCase(email)) {
+                    if (staffMember.getPasswordHash().equals(password)) {
+                        // Set up user session
+                        if (staffMember.getRole().equals("Manager")) {
+                            isManager = true;
+                        } else {
+                            isStaff = true;
+                        }
+
+                        deltapms.session.UserSession.login(
+                                staffMember.getFirstName() + " " + staffMember.getLastName(),
+                                staffMember.getRole(),
+                                staffMember.getEmail(),
+                                staffMember.getStaffID()
+                        );
+                        loggedIn = true;
+                        break;
+                    } else {
+                        JOptionPane.showMessageDialog(this,
+                                "Incorrect password for staff account.",
+                                "Login Error",
+                                JOptionPane.ERROR_MESSAGE);
+                        return;
+                    }
+                }
+            }
         }
-        
-    } else {
-        // No user found with this email
-        JOptionPane.showMessageDialog(this,
-                "No account found with this email address.\nPlease check your email or create a new account.",
-                "Login Error",
-                JOptionPane.ERROR_MESSAGE);
-    }
+
+        if (loggedIn) {
+            // Clear password field for security
+            jPasswordField1.setText("");
+
+            // Show success message with user info
+            JOptionPane.showMessageDialog(this,
+                    "Login successful!\nWelcome, " + deltapms.session.UserSession.getUserName()
+                    + "\nRole: " + deltapms.session.UserSession.getUserRole(),
+                    "Login Success",
+                    JOptionPane.INFORMATION_MESSAGE);
+            // Navigate to appropriate panel based on user role
+            if (isStaff) {
+                showPanel("StaffSystem");
+            }
+            if (isManager) {
+                showPanel("ManagerSystem");
+            } else {
+                showPanel("UserSystem");
+            }
+        } else {
+            // No user found with this email
+            JOptionPane.showMessageDialog(this,
+                    "No account found with this email address.\nPlease check your email or create a new account.",
+                    "Login Error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
-    
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
