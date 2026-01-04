@@ -359,7 +359,6 @@ public class NewBookingCustomer extends javax.swing.JPanel {
                                                                                                                     BOOKING INFORMATION:
                                                               Booking Date: %s
                                                               Customer ID: %d
-                                                              Deposit Status: Not Paid
                                                                                                                     Please confirm all details are correct.""",
                             roomNo,
                             roomTypeName,
@@ -404,10 +403,7 @@ public class NewBookingCustomer extends javax.swing.JPanel {
                                             Check-in: %s
                                             Check-out: %s
                                             Duration: %d night%s
-                                          
-                                          PAYMENT STATUS:
-                                            Deposit: Not Paid (to be paid at check-in)
-                                          
+
                                           Thank you for your booking!
                                           A confirmation has been saved to our system.""",
                                     customerId,

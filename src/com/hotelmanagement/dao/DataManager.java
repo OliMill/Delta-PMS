@@ -125,65 +125,109 @@ public class DataManager {
             Booking b = new Booking(
                     rs.getInt("BookingID"),
                     rs.getInt("CustomerID"),
-                    rs.getInt("RoomNo"),
-                    rs.getDate("CheckInDate").toLocalDate(),
-                    rs.getDate("CheckOutDate").toLocalDate(),
-                    rs.getBoolean("DepositePaid"),
-                    rs.getDate("DateMade") != null ? 
-                    rs.getDate("DateMade").toLocalDate() : null
-            );
-            bookings.add(b);
+                        rs.getInt("RoomNo"),
+                        rs.getDate("CheckInDate").toLocalDate(),
+                        rs.getDate("CheckOutDate").toLocalDate(),
+                        rs.getDate("DateMade") != null
+                        ? rs.getDate("DateMade").toLocalDate() : null
+                );
+                bookings.add(b);
+            }
         }
     }
-}
 
     public static boolean createBooking(int customerId, int roomId, LocalDate checkIn,
             LocalDate checkOut, double totalPrice) {
 
-        String sql = "INSERT INTO Booking (CustomerID, RoomNo, CheckInDate, CheckOutDate, DepositePaid, DateMade) VALUES (?, ?, ?, ?, ?, ?)";
+        String insertSql = "INSERT INTO Booking (CustomerID, RoomNo, CheckInDate, CheckOutDate, DateMade) VALUES (?, ?, ?, ?, ?)";
 
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
 
             pstmt.setInt(1, customerId);
             pstmt.setInt(2, roomId);
-            pstmt.setDate(3, Date.valueOf(checkIn));
-            pstmt.setDate(4, Date.valueOf(checkOut));
-            pstmt.setBoolean(5, false); // tinyint(1) = false (0) for deposit not paid
-            pstmt.setDate(6, new Date(System.currentTimeMillis())); // Current date for DateMade
+            pstmt.setDate(3, java.sql.Date.valueOf(checkIn));
+            pstmt.setDate(4, java.sql.Date.valueOf(checkOut));
+            pstmt.setDate(5, new java.sql.Date(System.currentTimeMillis()));
 
             int rowsAffected = pstmt.executeUpdate();
 
             if (rowsAffected > 0) {
-                loadDataFromDatabase(); // Reload all data to include new booking
+                loadDataFromDatabase();
+
+                // Logic to send email regardless of who is logged in
+                new Thread(() -> {
+                    String targetEmail = "";
+                    String targetName = "Valued Guest";
+
+                    // If a customer is logged in, we already have their info
+                    if (deltapms.session.UserSession.isCustomer()) {
+                        targetEmail = deltapms.session.UserSession.getUserEmail();
+                        targetName = deltapms.session.UserSession.getUserName();
+                    } else {
+                        // STAFF IS LOGGED IN: Look up the customer's email via the customerId
+                        targetEmail = getCustomerEmailById(customerId);
+                    }
+
+                    if (targetEmail != null && !targetEmail.isEmpty()) {
+                        String htmlContent = "<h1>Booking Confirmation</h1>"
+                                + "<p>Dear " + targetName + ",</p>"
+                                + "<p>A new booking has been created for you at Delta Hotels.</p>"
+                                + "<ul>"
+                                + "<li><b>Room:</b> " + roomId + "</li>"
+                                + "<li><b>Check-in:</b> " + checkIn + "</li>"
+                                + "<li><b>Check-out:</b> " + checkOut + "</li>"
+                                + "<li><b>Total Price:</b> £" + String.format("%.2f", totalPrice) + "</li>"
+                                + "</ul>";
+
+                        com.deltapms.utils.EmailService.sendEmail(targetEmail, "Booking Confirmation - Delta Hotels", htmlContent);
+                    }
+                }).start();
+
                 return true;
             }
             return false;
 
         } catch (SQLException e) {
             System.err.println("Error creating booking: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public static boolean deleteBooking(int bookingID) {
+        String sql = "DELETE FROM Booking WHERE BookingID = ?";
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, bookingID);
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
         }
     }
-    
-    public static boolean deleteBooking(int bookingID) {
-    String sql = "DELETE FROM Booking WHERE BookingID = ?";
-    try (Connection conn = DatabaseConnection.getConnection(); 
-         PreparedStatement pstmt = conn.prepareStatement(sql)) {
-        
-        pstmt.setInt(1, bookingID);
-        int affectedRows = pstmt.executeUpdate();
-        return affectedRows > 0;
-        
-    } catch (SQLException e) {
-        e.printStackTrace();
-        return false;
-    }
-}
 
     // Getters
     public static List<Customer> getCustomers() {
         return customers;
+    }
+
+    private static String getCustomerEmailById(int id) {
+        String email = "";
+        String sql = "SELECT Email FROM Customer WHERE CustomerID = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                email = rs.getString("Email");
+            }
+        } catch (SQLException e) {
+            System.err.println("Could not find customer email: " + e.getMessage());
+        }
+        return email;
     }
 
     public static List<Room> getRooms() {

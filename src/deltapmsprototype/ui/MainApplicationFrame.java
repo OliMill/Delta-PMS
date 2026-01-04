@@ -29,7 +29,8 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         panels.put("ManageBookingsStaff", new ManageBookingsStaff(this));
         panels.put("ManageExistingBookingStaff", new ManageExistingBookingStaff(this));
         panels.put("ManageCustomersStaff", new ManageCustomersStaff(this));
-        panels.put("AlterCustomerDetailsStaff", new AlterCustomerDetailsStaff(this));        
+        panels.put("AlterCustomerDetailsStaff", new AlterCustomerDetailsStaff(this));       
+        panels.put("CommunicateCustomersStaff", new CommunicateCustomersStaff(this));     
         for(Map.Entry<String, JPanel> entry: panels.entrySet())
             getContentPane().add(entry.getValue(),entry.getKey());
     }
