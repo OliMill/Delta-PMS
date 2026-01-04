@@ -1,9 +1,7 @@
 package deltapmsprototype;
 
-import deltapmsprototype.ui.MainApplicationFrame;
 import com.hotelmanagement.dao.DataManager; 
 import deltapmsprototype.ui.MainApplicationFrame;
-import java.time.LocalDate;
 import javax.swing.JOptionPane; 
 /*
 * EXAMPLE CUSTOMER LOGINS FOR TESTING
@@ -18,7 +16,7 @@ public class DeltaPMSPrototype {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+ 
         try {
             //attempt to load all data from database
             DataManager.loadDataFromDatabase();
