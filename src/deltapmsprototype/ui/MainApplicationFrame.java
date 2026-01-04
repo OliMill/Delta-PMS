@@ -34,7 +34,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         panels.put("CommunicateCustomersStaff", new CommunicateCustomersStaff(this));
         panels.put("ManagerSystem", new ManagerSystem(this));
         panels.put("ManageStaffManager", new ManageStaffManager(this));   
-        //panels.put("CommunicateCustomersStaff", new CommunicateCustomersStaff(this));   
+        panels.put("ManageRoomsManager", new ManageRoomsManager(this));   
 
         for (Map.Entry<String, JPanel> entry : panels.entrySet()) {
             getContentPane().add(entry.getValue(), entry.getKey());
