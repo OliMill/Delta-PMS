@@ -28,7 +28,7 @@ public class ManageRoomsManager extends javax.swing.JPanel {
     private void setupTableCustomization() {
         DefaultTableModel model = new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"Room No", "Type ID", "Bathrooms", "Single Beds", "Double Beds", "Capacity"}
+                new String[]{"Room No", "Type ID", "Bathrooms", "Single Beds", "Double Beds", "Capacity", "Nightly cost", "Room Name"}
         ) {
             @Override
             public boolean isCellEditable(int row, int col) {
@@ -73,6 +73,8 @@ public class ManageRoomsManager extends javax.swing.JPanel {
                                 model.setValueAt(finalType.getSingleBeds(), finalRow, 3);
                                 model.setValueAt(finalType.getDoubleBeds(), finalRow, 4);
                                 model.setValueAt(finalType.getSleepingCapacity(), finalRow, 5);
+                                model.setValueAt(finalType.getPricePerNight(), finalRow, 6);
+                                model.setValueAt(finalType.getRoomName(), finalRow, 7);
                             });
                         }
                     } catch (Exception ex) {
@@ -120,7 +122,9 @@ public class ManageRoomsManager extends javax.swing.JPanel {
                 (myType != null) ? myType.getBathrooms() : "N/A",
                 (myType != null) ? myType.getSingleBeds() : "N/A",
                 (myType != null) ? myType.getDoubleBeds() : "N/A",
-                (myType != null) ? myType.getSleepingCapacity() : "N/A"
+                (myType != null) ? myType.getSleepingCapacity() : "N/A",
+                (myType != null) ? myType.getPricePerNight() : "N/A",
+                (myType != null) ? myType.getRoomName() : "N/A"
             });
         }
     }
@@ -392,9 +396,12 @@ public class ManageRoomsManager extends javax.swing.JPanel {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         // Create Inputs
+        //adds a new room type
         javax.swing.JSpinner bathSpinner = new javax.swing.JSpinner(new javax.swing.SpinnerNumberModel(1, 0, 10, 1));
         javax.swing.JSpinner singleSpinner = new javax.swing.JSpinner(new javax.swing.SpinnerNumberModel(0, 0, 10, 1));
         javax.swing.JSpinner doubleSpinner = new javax.swing.JSpinner(new javax.swing.SpinnerNumberModel(0, 0, 10, 1));
+        javax.swing.JSpinner priceSpinner = new javax.swing.JSpinner(new javax.swing.SpinnerNumberModel(0, 0, 500, 0.01));
+        javax.swing.JTextField roomName = new javax.swing.JTextField("RoomTypeName");
 
         javax.swing.JCheckBox checkDesk = new javax.swing.JCheckBox("Desk");
         javax.swing.JCheckBox checkBath = new javax.swing.JCheckBox("Bath");
@@ -411,6 +418,10 @@ public class ManageRoomsManager extends javax.swing.JPanel {
         panel.add(singleSpinner);
         panel.add(new javax.swing.JLabel("Double Beds:"));
         panel.add(doubleSpinner);
+        panel.add(new javax.swing.JLabel("Price Per Night:"));
+        panel.add(priceSpinner);
+        panel.add(new javax.swing.JLabel("Room Name"));
+        panel.add(roomName);
         panel.add(checkTV);
         panel.add(checkDesk);
         panel.add(checkShower);
@@ -424,8 +435,8 @@ public class ManageRoomsManager extends javax.swing.JPanel {
         if (result == javax.swing.JOptionPane.OK_OPTION) {
             //sql structure
 
-            String sql = "INSERT INTO RoomType (TV, SingleBeds, Shower, DoubleBeds, Desk, DepositBOX, CoffeeMachine, Bathrooms, Bath) "
-                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO RoomType (TV, SingleBeds, Shower, DoubleBeds, Desk, DepositBOX, CoffeeMachine, Bathrooms, Bath, PricePerNight, RoomName) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             try (java.sql.Connection conn = com.hotelmanagement.dao.DatabaseConnection.getConnection(); java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -439,6 +450,8 @@ public class ManageRoomsManager extends javax.swing.JPanel {
                 pstmt.setBoolean(7, checkCoffee.isSelected());
                 pstmt.setInt(8, (int) bathSpinner.getValue());
                 pstmt.setBoolean(9, checkBath.isSelected());
+                pstmt.setDouble(10, (Double) priceSpinner.getValue());
+                pstmt.setString(11, (String) roomName.getText());
 
                 pstmt.executeUpdate();
 

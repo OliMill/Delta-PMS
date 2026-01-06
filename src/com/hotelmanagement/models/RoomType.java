@@ -11,11 +11,13 @@ public class RoomType {
     private boolean hasTV;
     private boolean hasCoffee;
     private boolean hasDepositBox;
+    private double pricePerNight;
+    private String roomName;
 
     
     public RoomType(int roomTypeID, int bathrooms, int singleBeds, int doubleBeds, 
                    boolean hasDesk, boolean hasBath, boolean hasShower, boolean hasTV, 
-                   boolean hasCoffee, boolean hasDepositBox) {
+                   boolean hasCoffee, boolean hasDepositBox, double pricePerNight, String roomName) {
         this.roomTypeID = roomTypeID;
         this.bathrooms = bathrooms;
         this.singleBeds = singleBeds;
@@ -26,6 +28,8 @@ public class RoomType {
         this.hasTV = hasTV;
         this.hasCoffee = hasCoffee;
         this.hasDepositBox = hasDepositBox;
+        this.pricePerNight = pricePerNight;
+        this.roomName = roomName;
 
     }
 
@@ -68,6 +72,15 @@ public class RoomType {
     public boolean isHasDepositBox() {
         return hasDepositBox;
     }
+
+    public double getPricePerNight() {
+        return pricePerNight;
+    }
+
+    public String getRoomName() {
+        return roomName;
+    }
+    
 
     public void setRoomTypeID(int roomTypeID) {
         this.roomTypeID = roomTypeID;
@@ -117,4 +130,14 @@ public class RoomType {
     public int getSleepingCapacity() {
         return singleBeds + (doubleBeds * 2);
     }
+
+    public void setPricePerNight(double pricePerNight) {
+        this.pricePerNight = pricePerNight;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
+    
+    
 }

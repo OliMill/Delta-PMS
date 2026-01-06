@@ -129,7 +129,8 @@ public class NewBookingCustomer extends javax.swing.JPanel {
             "Shower",
             "TV",
             "Coffee",
-            "Safe"
+            "Safe",
+            "Cost per night",
         };
 
         DefaultTableModel model = new DefaultTableModel(columnNames, 0) {
@@ -179,7 +180,7 @@ public class NewBookingCustomer extends javax.swing.JPanel {
             if (type != null) {
                 Object[] row = new Object[]{
                     room.getRoomNo(),
-                    getRoomTypeName(type),
+                    type.getRoomName(),
                     type.getBathrooms(),
                     type.getSingleBeds(),
                     type.getDoubleBeds(),
@@ -188,7 +189,9 @@ public class NewBookingCustomer extends javax.swing.JPanel {
                     type.isHasShower(),
                     type.isHasTV(),
                     type.isHasCoffee(),
-                    type.isHasDepositBox()
+                    type.isHasDepositBox(),
+                    type.getPricePerNight(),
+                    
                 };
                 model.addRow(row);
             }
@@ -209,31 +212,6 @@ public class NewBookingCustomer extends javax.swing.JPanel {
             }
         }
         return null;
-    }
-
-    private String getRoomTypeName(RoomType type) {
-        if (type == null) {
-            return "Unknown";
-        }
-
-        return switch (type.getRoomTypeID()) {
-            case 1 ->
-                "Standard";
-            case 2 ->
-                "Deluxe";
-            case 3 ->
-                "Family Suite";
-            case 4 ->
-                "Business Suite";
-            case 5 ->
-                "Executive Suite";
-            case 6 ->
-                "Economy";
-            case 7 ->
-                "Penthouse";
-            default ->
-                "Type " + type.getRoomTypeID();
-        };
     }
 
     private LocalDate convertDate(Date date) {
@@ -281,18 +259,16 @@ public class NewBookingCustomer extends javax.swing.JPanel {
             int roomNo = selectedRoom.getRoomNo();
 
             // Get room type name for display
-            RoomType roomType = getRoomTypeById(selectedRoom.getRoomTypeID());
-            String roomTypeName = roomType != null ? getRoomTypeName(roomType) : "Unknown";
+            String RoomTypeName;
+            RoomTypeName = selectedRoom.getRoomTypeNameById();
+            String roomTypeName = RoomTypeName;
+            
 
             // Get current date for DateMade
             LocalDate dateMade = LocalDate.now();
 
             // Calculate price based on room capacity
-            double pricePerNight = 50.0;
-            if (roomType != null) {
-                // Using standard math based on bed counts from your RoomType class
-                pricePerNight += (roomType.getDoubleBeds() * 40.0) + (roomType.getSingleBeds() * 20.0);
-            }
+            double pricePerNight = selectedRoom.getRoomPrice();
             double totalPrice = pricePerNight * nights;
 
             //if current user is member of staff confirm which user theyre booking for:

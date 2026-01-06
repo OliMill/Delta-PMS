@@ -97,7 +97,10 @@ public class DataManager {
                         rs.getBoolean("Shower"),
                         rs.getBoolean("TV"),
                         rs.getBoolean("CoffeeMachine"),
-                        rs.getBoolean("DepositBOX")
+                        rs.getBoolean("DepositBOX"),
+                        rs.getDouble("PricePerNight"),
+                        rs.getString("RoomName")
+                        
                 );
                 roomTypes.add(rt);
             }
