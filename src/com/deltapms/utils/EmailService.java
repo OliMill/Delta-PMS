@@ -65,6 +65,8 @@ public class EmailService {
 
     /**
      * Basic Regex to check if the email format is valid.
+     * @param email
+     * @return 
      */
     public static boolean isValidEmail(String email) {
         if (email == null) return false;
