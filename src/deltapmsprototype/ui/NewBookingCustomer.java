@@ -422,8 +422,7 @@ public class NewBookingCustomer extends javax.swing.JPanel {
                         MainApplication.showPanel("StaffSystem");
                     }
                     if ("Manager".equals(deltapms.session.UserSession.getUserRole())){
-                        // TO DO CHANGE TO MANAGER SYSTEM
-                        MainApplication.showPanel("StaffSystem");
+                        MainApplication.showPanel("ManagerSystem");
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, """

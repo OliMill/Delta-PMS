@@ -3,6 +3,7 @@ package deltapmsprototype;
 import com.hotelmanagement.dao.DataManager; 
 import deltapmsprototype.ui.MainApplicationFrame;
 import javax.swing.JOptionPane; 
+import com.deltapms.utils.PasswordHasher;
 /*
 * EXAMPLE CUSTOMER LOGINS FOR TESTING
 *1	James	Williams	1978-05-10	james.w@email.com	jwilliams	cust_hash_1
@@ -16,7 +17,7 @@ public class DeltaPMSPrototype {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
- 
+        System.out.println(PasswordHasher.hashPassword("hashed_pass_1"));
         try {
             //attempt to load all data from database
             DataManager.loadDataFromDatabase();

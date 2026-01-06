@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import com.deltapms.utils.PasswordHasher;
 
 public class AlterCustomerDetailsStaff extends javax.swing.JPanel {
 
@@ -331,38 +332,42 @@ public class AlterCustomerDetailsStaff extends javax.swing.JPanel {
                 return;
             }
 
-            /*
-            
-            TODO:
-            IMPLEMENT HASHING SYSTEM
-            
-            */
-            String hashedPass = rawPassword;
+            String r = PasswordHasher.securePassword(rawPassword);
+            if (!r.equals("")) {
+                // This will pop up a window showing ALL missing requirements
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        result,
+                        "Security Requirements",
+                        javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+            } else {
+                String hashedPass = rawPassword;
+                // Database Insertion
+                String sql = "INSERT INTO Customer (FirstName, LastName, DOB, Email, PasswordHash) VALUES (?, ?, ?, ?, ?)";
 
-            // Database Insertion
-            String sql = "INSERT INTO Customer (FirstName, LastName, DOB, Email, PasswordHash) VALUES (?, ?, ?, ?, ?)";
+                try (java.sql.Connection conn = com.hotelmanagement.dao.DatabaseConnection.getConnection(); java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            try (java.sql.Connection conn = com.hotelmanagement.dao.DatabaseConnection.getConnection(); java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                    pstmt.setString(1, fName);
+                    pstmt.setString(2, lName);
+                    pstmt.setString(3, dob);
+                    pstmt.setString(4, email);
+                    pstmt.setString(5, hashedPass);
 
-                pstmt.setString(1, fName);
-                pstmt.setString(2, lName);
-                pstmt.setString(3, dob);
-                pstmt.setString(4, email);
-                pstmt.setString(5, hashedPass);
+                    pstmt.executeUpdate();
 
-                pstmt.executeUpdate();
+                    JOptionPane.showMessageDialog(this, "Customer " + fName + " added successfully!");
 
-                JOptionPane.showMessageDialog(this, "Customer " + fName + " added successfully!");
+                    //Refresh the main table
+                    loadCustomerTable();
 
-                //Refresh the main table
-                loadCustomerTable();
-
-            } catch (java.sql.SQLException e) {
-                // Check for specific errors like duplicate emails
-                if (e.getMessage().contains("UNIQUE") || e.getMessage().contains("Duplicate")) {
-                    JOptionPane.showMessageDialog(this, "Error: This email is already registered.", "Database Error", JOptionPane.ERROR_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(this, "Database Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (java.sql.SQLException e) {
+                    // Check for specific errors like duplicate emails
+                    if (e.getMessage().contains("UNIQUE") || e.getMessage().contains("Duplicate")) {
+                        JOptionPane.showMessageDialog(this, "Error: This email is already registered.", "Database Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Database Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         }

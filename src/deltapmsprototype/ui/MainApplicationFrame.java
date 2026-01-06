@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import com.hotelmanagement.dao.DataManager;
 import com.hotelmanagement.models.Customer;
 import com.hotelmanagement.models.Staff;
+import com.deltapms.utils.PasswordHasher;
 import java.util.List;
 import javax.swing.JOptionPane;
 
@@ -106,7 +107,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 472, Short.MAX_VALUE)
+                .addGap(0, 753, Short.MAX_VALUE)
                 .addComponent(jLabel1))
         );
         jPanel1Layout.setVerticalGroup(
@@ -192,7 +193,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 403, Short.MAX_VALUE))
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE))
         );
 
         getContentPane().add(jPanel2, "card2");
@@ -228,11 +229,11 @@ public class MainApplicationFrame extends javax.swing.JFrame {
 
         boolean loggedIn = false;
 
-        // 1. Check customers first
+        // Check customers first
         for (Customer customer : customers) {
             if (customer.getEmail().equalsIgnoreCase(email)) {
-                // For prototyping purposes ignore hashing
-                if (customer.getPasswordHash().equals(password)) {
+
+                if (PasswordHasher.verifyPassword(password, customer.getPasswordHash())) {
                     // Set up user session
                     deltapms.session.UserSession.login(
                             customer.getFirstName() + " " + customer.getLastName(),
@@ -252,11 +253,11 @@ public class MainApplicationFrame extends javax.swing.JFrame {
             }
         }
 
-        // 2. If not a customer, check staff (includes Managers in list)
+        // If not a customer, check staff (includes Managers in list)
         if (!loggedIn) {
             for (Staff staffMember : staff) {
                 if (staffMember.getEmail().equalsIgnoreCase(email)) {
-                    if (staffMember.getPasswordHash().equals(password)) {
+                    if (PasswordHasher.verifyPassword(password, staffMember.getPasswordHash())) {
                         // Set up user session
                         if (staffMember.getRole().equals("Manager")) {
                             isManager = true;

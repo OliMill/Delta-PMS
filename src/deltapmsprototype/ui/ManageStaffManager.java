@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import com.deltapms.utils.PasswordHasher;
 /**
  *
  * Panel is functionally identical to customer editing with renaming and slight modifications where necessary
@@ -364,25 +365,37 @@ public class ManageStaffManager extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(this, "First Name, Email, and Password are required.", "Input Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            String r = PasswordHasher.securePassword(rawPassword);
 
-            // Database Insertion
-            String sql = "INSERT INTO Staff (FirstName, LastName, DOB, Email, Role, PasswordHash) VALUES (?, ?, ?, ?, ?, ?)";
+            if (!r.equals("")) {
+                // This will pop up a window showing ALL missing requirements
+                javax.swing.JOptionPane.showMessageDialog(
+                        this,
+                        result,
+                        "Security Requirements",
+                        javax.swing.JOptionPane.ERROR_MESSAGE
+                );
+            } else {
+                // Success: Proceed to Hash and Save
+                // Database Insertion
+                String sql = "INSERT INTO Staff (FirstName, LastName, DOB, Email, Role, PasswordHash) VALUES (?, ?, ?, ?, ?, ?)";
 
-            try (java.sql.Connection conn = com.hotelmanagement.dao.DatabaseConnection.getConnection(); java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                try (java.sql.Connection conn = com.hotelmanagement.dao.DatabaseConnection.getConnection(); java.sql.PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-                pstmt.setString(1, fName);
-                pstmt.setString(2, lName);
-                pstmt.setString(3, dob);
-                pstmt.setString(4, email);
-                pstmt.setString(5, selectedRole); // "Manager" or "Staff"
-                pstmt.setString(6, rawPassword); // Replace with hashing later
+                    pstmt.setString(1, fName);
+                    pstmt.setString(2, lName);
+                    pstmt.setString(3, dob);
+                    pstmt.setString(4, email);
+                    pstmt.setString(5, selectedRole); // "Manager" or "Staff"
+                    pstmt.setString(6, rawPassword); // Replace with hashing later
 
-                pstmt.executeUpdate();
-                JOptionPane.showMessageDialog(this, "Staff member " + fName + " added successfully!");
-                loadStaffTable();
+                    pstmt.executeUpdate();
+                    JOptionPane.showMessageDialog(this, "Staff member " + fName + " added successfully!");
+                    loadStaffTable();
 
-            } catch (java.sql.SQLException e) {
-                JOptionPane.showMessageDialog(this, "Database Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                } catch (java.sql.SQLException e) {
+                    JOptionPane.showMessageDialog(this, "Database Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }//GEN-LAST:event_jButton4ActionPerformed
