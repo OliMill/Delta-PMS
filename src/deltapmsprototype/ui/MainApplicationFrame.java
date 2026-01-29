@@ -10,6 +10,8 @@ import com.hotelmanagement.models.Staff;
 import com.deltapms.utils.PasswordHasher;
 import java.util.List;
 import javax.swing.JOptionPane;
+import com.deltapms.utils.PanelSwitching;
+        
 
 public class MainApplicationFrame extends javax.swing.JFrame {
 
@@ -17,6 +19,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
     private final Map<String, JPanel> panels;
 
     public MainApplicationFrame() {
+        
         this.panels = new HashMap<>();
         initComponents();
         initPanels();
@@ -43,6 +46,8 @@ public class MainApplicationFrame extends javax.swing.JFrame {
     }
 
     public void showPanel(String name) {
+        PanelSwitching switcher = new PanelSwitching(this);
+        switcher.pushPanel("SettingsPanel");
         cl.show(getContentPane(), name);
         getContentPane().revalidate();
         getContentPane().repaint();
