@@ -318,7 +318,7 @@ public class ManageStaffManager extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // Create standard text fields
+
         
         
         //Main difference from customer version here
@@ -387,7 +387,7 @@ public class ManageStaffManager extends javax.swing.JPanel {
                     pstmt.setString(3, dob);
                     pstmt.setString(4, email);
                     pstmt.setString(5, selectedRole); // "Manager" or "Staff"
-                    pstmt.setString(6, rawPassword); // Replace with hashing later
+                    pstmt.setString(6, PasswordHasher.hashPassword(rawPassword));
 
                     pstmt.executeUpdate();
                     JOptionPane.showMessageDialog(this, "Staff member " + fName + " added successfully!");

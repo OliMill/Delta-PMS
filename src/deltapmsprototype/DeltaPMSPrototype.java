@@ -25,6 +25,7 @@ public class DeltaPMSPrototype {
             java.awt.EventQueue.invokeLater(() -> {
                 new MainApplicationFrame().setVisible(true);
             });
+            
 
         } catch (Exception e) {
             // If any error occurs during connection or loading

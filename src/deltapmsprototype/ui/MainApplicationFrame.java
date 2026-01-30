@@ -17,12 +17,14 @@ public class MainApplicationFrame extends javax.swing.JFrame {
 
     private CardLayout cl;
     private final Map<String, JPanel> panels;
-
+    private final PanelSwitching switcher;
+    
     public MainApplicationFrame() {
         
         this.panels = new HashMap<>();
         initComponents();
         initPanels();
+        this.switcher = new PanelSwitching(this);
     }
 
     private void initPanels() {
@@ -46,8 +48,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
     }
 
     public void showPanel(String name) {
-        PanelSwitching switcher = new PanelSwitching(this);
-        switcher.pushPanel("SettingsPanel");
+        switcher.pushPanel(name);
         cl.show(getContentPane(), name);
         getContentPane().revalidate();
         getContentPane().repaint();
@@ -126,7 +127,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         jPanel3.setLayout(new java.awt.GridBagLayout());
 
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField1.setText("john.smith@hotel.com");
+        jTextField1.setText("JS@hotel.com");
         jTextField1.setBorder(javax.swing.BorderFactory.createTitledBorder("Email"));
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -143,7 +144,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         jPanel3.add(jTextField1, gridBagConstraints);
 
         jPasswordField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jPasswordField1.setText("hashed_pass_1");
+        jPasswordField1.setText("Password");
         jPasswordField1.setToolTipText("");
         jPasswordField1.setBorder(javax.swing.BorderFactory.createTitledBorder("Password"));
         jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
@@ -211,7 +212,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jPasswordField1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
+        showPanel("ManageStaffManager");
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed

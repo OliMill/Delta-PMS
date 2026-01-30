@@ -10,26 +10,35 @@ import java.util.Stack;
  *
  * @author 4-omillard
  */
-public class PanelSwitching{
-    // Declare the stack
+public class PanelSwitching {
     private final Stack<String> panelStack = new Stack<>();
-    private final MainApplicationFrame MainApplication1;
-    // Use a constructor to set the initial state
-    public PanelSwitching(MainApplicationFrame MainApplication) {
-        panelStack.push("MainApplicationFrame");
-        this.MainApplication1 = MainApplication;
+    private final MainApplicationFrame mainApp;
+
+    public PanelSwitching(MainApplicationFrame mainApp) {
+        this.mainApp = mainApp;
+        // Initial panel
+        panelStack.push("MainApplicationFrame"); 
     }
 
-    // Add a method to handle future pushes
     public void pushPanel(String panelName) {
-        panelStack.push(panelName);
+        // Only push if different
+        if (panelStack.isEmpty() || !panelStack.peek().equals(panelName)) {
+            panelStack.push(panelName);
+        }
     }
-    public void returnPanel(){
-        try{
-            panelStack.pop();
-            MainApplication1.showPanel(panelStack.peek());
-        } catch(Exception e){
-            System.out.println("Panel return error");
+
+    public void returnPanel() {
+        // We need at least 2 items
+        if (panelStack.size() > 1) {
+            try {
+                panelStack.pop(); // Remove current panel
+                String previousPanel = panelStack.peek(); // Look at the one under it
+                mainApp.showPanel(previousPanel);
+            } catch (Exception e) {
+                System.err.println("Error returning to panel: " + e.getMessage());
+            }
+        } else {
+            System.out.println("Already at the root panel.");
         }
     }
 }
