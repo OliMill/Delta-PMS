@@ -41,4 +41,9 @@ public class PanelSwitching {
             System.out.println("Already at the root panel.");
         }
     }
+
+    public Stack<String> getPanelStack() {
+        return panelStack;
+    }
+    
 }

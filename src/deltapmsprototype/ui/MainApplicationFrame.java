@@ -17,7 +17,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
 
     private CardLayout cl;
     private final Map<String, JPanel> panels;
-    private final PanelSwitching switcher;
+    public final PanelSwitching switcher;
     
     public MainApplicationFrame() {
         
@@ -40,7 +40,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         panels.put("CommunicateCustomersStaff", new CommunicateCustomersStaff(this));
         panels.put("ManagerSystem", new ManagerSystem(this));
         panels.put("ManageStaffManager", new ManageStaffManager(this));   
-        panels.put("ManageRoomsManager", new ManageRoomsManager(this));   
+        panels.put("ManageRoomsManager", new ManageRoomsManager(this)); 
 
         for (Map.Entry<String, JPanel> entry : panels.entrySet()) {
             getContentPane().add(entry.getValue(), entry.getKey());
@@ -48,7 +48,10 @@ public class MainApplicationFrame extends javax.swing.JFrame {
     }
 
     public void showPanel(String name) {
-        switcher.pushPanel(name);
+        //ensure doesnt add duplicate panels on stack if returning panels
+        if(!switcher.getPanelStack().peek().equals(name)){
+            switcher.pushPanel(name);
+        }
         cl.show(getContentPane(), name);
         getContentPane().revalidate();
         getContentPane().repaint();
@@ -202,7 +205,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 512, Short.MAX_VALUE))
         );
 
-        getContentPane().add(jPanel2, "card2");
+        getContentPane().add(jPanel2, "MainApplicationFrame");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
