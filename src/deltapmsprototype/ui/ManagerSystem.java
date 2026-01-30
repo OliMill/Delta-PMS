@@ -106,7 +106,7 @@ public class ManagerSystem extends javax.swing.JPanel {
         jButton14.setBackground(new java.awt.Color(104, 21, 35));
         jButton14.setFont(new java.awt.Font("Arial Narrow", 0, 24)); // NOI18N
         jButton14.setForeground(new java.awt.Color(242, 68, 29));
-        jButton14.setText("Return");
+        jButton14.setText("Sign Out");
         jButton14.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED), javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED)));
         jButton14.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

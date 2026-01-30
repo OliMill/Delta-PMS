@@ -4,6 +4,8 @@
  */
 package deltapmsprototype.ui;
 
+import java.text.SimpleDateFormat;
+
 /**
  *
  * @author Oli
@@ -13,8 +15,34 @@ public class CreateNewLogin extends javax.swing.JPanel {
     /**
      * Creates new form CreateNewLogin
      */
-    public CreateNewLogin() {
+    private com.toedter.calendar.JCalendar dateCalendar;
+    private javax.swing.JPopupMenu calendarPopup;
+    private final MainApplicationFrame MainApplication;
+    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    
+    public CreateNewLogin(MainApplicationFrame MainApplication ) {
         initComponents();
+        this.MainApplication = MainApplication;
+        
+        dateCalendar = new com.toedter.calendar.JCalendar();
+        calendarPopup = new javax.swing.JPopupMenu();
+        calendarPopup.add(dateCalendar);
+        // 2. Add the listener to handle date selection
+        dateCalendar.addPropertyChangeListener("calendar", new java.beans.PropertyChangeListener() {
+            @Override
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                if ("calendar".equals(evt.getPropertyName())) {
+                    java.util.Date selectedDate = dateCalendar.getDate();
+
+                    // Update the button's text
+                    jButton3.setText("Selected Date: " + DATE_FORMAT.format(selectedDate));
+
+                    // Hide the popup
+                    calendarPopup.setVisible(false);
+                }
+            }
+        });
+
     }
 
     private boolean isValidEmail(String email) {
@@ -48,8 +76,8 @@ public class CreateNewLogin extends javax.swing.JPanel {
         jButton2 = new javax.swing.JButton();
         jPasswordField2 = new javax.swing.JPasswordField();
         jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
         jTextField4 = new javax.swing.JTextField();
+        jButton3 = new javax.swing.JButton();
 
         jPanel1.setBackground(new java.awt.Color(89, 4, 20));
         jPanel1.setForeground(new java.awt.Color(89, 4, 20));
@@ -122,8 +150,7 @@ public class CreateNewLogin extends javax.swing.JPanel {
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
         jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField1.setText("john.smith@hotel.com");
-        jTextField1.setBorder(javax.swing.BorderFactory.createTitledBorder("Email"));
+        jTextField1.setBorder(javax.swing.BorderFactory.createTitledBorder("First Name"));
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
@@ -139,7 +166,6 @@ public class CreateNewLogin extends javax.swing.JPanel {
         jPanel2.add(jTextField1, gridBagConstraints);
 
         jPasswordField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jPasswordField1.setText("hashed_pass_1");
         jPasswordField1.setToolTipText("");
         jPasswordField1.setBorder(javax.swing.BorderFactory.createTitledBorder("Confirm Password"));
         jPasswordField1.addActionListener(new java.awt.event.ActionListener() {
@@ -185,7 +211,6 @@ public class CreateNewLogin extends javax.swing.JPanel {
         jPanel2.add(jButton2, gridBagConstraints);
 
         jPasswordField2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jPasswordField2.setText("hashed_pass_1");
         jPasswordField2.setToolTipText("");
         jPasswordField2.setBorder(javax.swing.BorderFactory.createTitledBorder("Password"));
         jPasswordField2.addActionListener(new java.awt.event.ActionListener() {
@@ -203,8 +228,7 @@ public class CreateNewLogin extends javax.swing.JPanel {
         jPanel2.add(jPasswordField2, gridBagConstraints);
 
         jTextField2.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField2.setText("john.smith@hotel.com");
-        jTextField2.setBorder(javax.swing.BorderFactory.createTitledBorder("Email"));
+        jTextField2.setBorder(javax.swing.BorderFactory.createTitledBorder("Last Name"));
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField2ActionPerformed(evt);
@@ -219,25 +243,7 @@ public class CreateNewLogin extends javax.swing.JPanel {
         gridBagConstraints.ipady = 10;
         jPanel2.add(jTextField2, gridBagConstraints);
 
-        jTextField3.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField3.setText("john.smith@hotel.com");
-        jTextField3.setBorder(javax.swing.BorderFactory.createTitledBorder("Email"));
-        jTextField3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField3ActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 10;
-        gridBagConstraints.ipady = 10;
-        jPanel2.add(jTextField3, gridBagConstraints);
-
         jTextField4.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField4.setText("john.smith@hotel.com");
         jTextField4.setBorder(javax.swing.BorderFactory.createTitledBorder("Email"));
         jTextField4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -253,6 +259,26 @@ public class CreateNewLogin extends javax.swing.JPanel {
         gridBagConstraints.ipady = 10;
         jPanel2.add(jTextField4, gridBagConstraints);
 
+        jButton3.setText("Date Of Birth");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton3MouseClicked(evt);
+            }
+        });
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 4;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 10;
+        gridBagConstraints.ipady = 10;
+        jPanel2.add(jButton3, gridBagConstraints);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -265,7 +291,7 @@ public class CreateNewLogin extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 449, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -293,35 +319,40 @@ public class CreateNewLogin extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField2ActionPerformed
 
-    private void jTextField3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField3ActionPerformed
-
     private void jTextField4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField4ActionPerformed
 
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
-        MainApplication1.switcher.returnPanel();
+        MainApplication.switcher.returnPanel();
     }//GEN-LAST:event_jButton15ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        int x = 0;
+        int y = jButton3.getHeight();
+        // Show the popup relative to jButton2
+        calendarPopup.show(jButton3, x, y);
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
+        
+    }//GEN-LAST:event_jButton3MouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton14;
     private javax.swing.JButton jButton15;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
     private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel9;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JPasswordField jPasswordField2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JTextField jTextField4;
     // End of variables declaration//GEN-END:variables
 }

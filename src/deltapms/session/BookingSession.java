@@ -14,7 +14,7 @@ public class BookingSession {
         checkInDate = checkIn;
         checkOutDate = checkOut;
         // Calculate price based on room type and duration
-        totalPrice = calculatePrice(room, checkIn, checkOut);
+        totalPrice = 0;
     }
     
     public static void clear() {
@@ -23,34 +23,7 @@ public class BookingSession {
         checkOutDate = null;
         totalPrice = 0.0;
     }
-    
-    private static double calculatePrice(Room room, LocalDate checkIn, LocalDate checkOut) {
-        long nights = java.time.temporal.ChronoUnit.DAYS.between(checkIn, checkOut);
-        
-        // Simple pricing based on room type ID
-        double nightlyRate;
-        nightlyRate = switch (room.getRoomTypeID()) {
-            // TEMPORARY CONSTANT PRICE WILL BE ALTERABLE
-            case 1 -> 100.0;
-            case 2 -> 150.0;
-            case 3 -> 200.0;
-            case 4 -> 180.0;
-            case 5 -> 250.0;
-            case 6 -> 80.0;
-            case 7 -> 500.0;
-            default -> 100.0;
-        }; 
-        // Standard
-        // Deluxe
-        // Family Suite
-        // Business Suite
-        // Executive Suite
-        // Economy
-        // Penthouse
-        
-        return nightlyRate * nights;
-    }
-    
+  
     // Getters
     public static Room getSelectedRoom() {
         return selectedRoom;

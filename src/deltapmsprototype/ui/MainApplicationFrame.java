@@ -41,6 +41,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         panels.put("ManagerSystem", new ManagerSystem(this));
         panels.put("ManageStaffManager", new ManageStaffManager(this));   
         panels.put("ManageRoomsManager", new ManageRoomsManager(this)); 
+        panels.put("CreateNewLogin", new CreateNewLogin(this));
 
         for (Map.Entry<String, JPanel> entry : panels.entrySet()) {
             getContentPane().add(entry.getValue(), entry.getKey());
@@ -51,6 +52,9 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         //ensure doesnt add duplicate panels on stack if returning panels
         if(!switcher.getPanelStack().peek().equals(name)){
             switcher.pushPanel(name);
+        } if (switcher.getPanelStack().peek().equals("MainApplicationFrame")){
+            deltapms.session.UserSession.logout();
+            System.out.println(deltapms.session.UserSession.getUserId());
         }
         cl.show(getContentPane(), name);
         getContentPane().revalidate();
@@ -215,7 +219,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jPasswordField1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        showPanel("ManageStaffManager");
+        showPanel("CreateNewLogin");
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
