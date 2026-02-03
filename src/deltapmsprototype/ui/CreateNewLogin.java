@@ -4,7 +4,9 @@
  */
 package deltapmsprototype.ui;
 
+import com.deltapms.utils.PasswordHasher;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 
 /**
  *
@@ -308,7 +310,22 @@ public class CreateNewLogin extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-
+        boolean validAccount = true;
+        if (!isValidEmail(jTextField4.getText())){
+            System.out.println("inValid email");
+            validAccount = false;
+            
+        }if (!(PasswordHasher.securePassword(new String(jPasswordField1.getPassword())).equals(""))){
+            System.out.println(PasswordHasher.securePassword(new String(jPasswordField1.getPassword())));
+            validAccount = false;
+            
+        }if (!Arrays.equals(jPasswordField1.getPassword(), jPasswordField2.getPassword())){
+            System.out.println("not macth pass");
+            validAccount = false;
+            
+        }if (jTextField1.getText().equals("")||jTextField2.getText().equals("")){
+            System.out.println("Name and surname cant be empty");
+        }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jPasswordField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPasswordField2ActionPerformed
