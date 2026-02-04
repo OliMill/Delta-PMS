@@ -269,7 +269,7 @@ public class CommunicateCustomersStaff extends javax.swing.JPanel {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 621, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 863, Short.MAX_VALUE)
                 .addComponent(jLabel1))
         );
         jPanel1Layout.setVerticalGroup(
@@ -311,6 +311,10 @@ public class CommunicateCustomersStaff extends javax.swing.JPanel {
         gridBagConstraints.weighty = 2.0;
         jPanel2.add(jScrollPane1, gridBagConstraints);
 
+        jScrollPane3.setPreferredSize(new java.awt.Dimension(1, 1));
+
+        customerList.setFixedCellWidth(200);
+        customerList.setFocusable(false);
         customerList.setPreferredSize(new java.awt.Dimension(1, 1));
         jScrollPane3.setViewportView(customerList);
 

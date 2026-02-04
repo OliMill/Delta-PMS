@@ -317,6 +317,7 @@ public class CreateNewLogin extends javax.swing.JPanel {
             
         }if (!(PasswordHasher.securePassword(new String(jPasswordField1.getPassword())).equals(""))){
             System.out.println(PasswordHasher.securePassword(new String(jPasswordField1.getPassword())));
+
             validAccount = false;
             
         }if (!Arrays.equals(jPasswordField1.getPassword(), jPasswordField2.getPassword())){
