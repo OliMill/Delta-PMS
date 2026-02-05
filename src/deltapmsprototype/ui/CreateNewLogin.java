@@ -6,7 +6,11 @@ package deltapmsprototype.ui;
 
 import com.deltapms.utils.PasswordHasher;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Arrays;
+import java.util.Date;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -19,8 +23,12 @@ public class CreateNewLogin extends javax.swing.JPanel {
      */
     private com.toedter.calendar.JCalendar dateCalendar;
     private javax.swing.JPopupMenu calendarPopup;
+    
+    
+ 
     private final MainApplicationFrame MainApplication;
     private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+
     
     public CreateNewLogin(MainApplicationFrame MainApplication ) {
         initComponents();
@@ -311,21 +319,47 @@ public class CreateNewLogin extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         boolean validAccount = true;
+        String errorMessage = "missing requirements:\n";
         if (!isValidEmail(jTextField4.getText())){
-            System.out.println("inValid email");
+            errorMessage = errorMessage + "inValid email\n";
             validAccount = false;
-            
+        //requirements checking    
         }if (!(PasswordHasher.securePassword(new String(jPasswordField1.getPassword())).equals(""))){
-            System.out.println(PasswordHasher.securePassword(new String(jPasswordField1.getPassword())));
-
-            validAccount = false;
             
+            errorMessage = errorMessage + "Missing following password requirements:\n"+PasswordHasher.securePassword(new String(jPasswordField1.getPassword())) +"\n";
+            validAccount = false;
+           
         }if (!Arrays.equals(jPasswordField1.getPassword(), jPasswordField2.getPassword())){
-            System.out.println("not macth pass");
+            
+            errorMessage = errorMessage + "passwords dont match\n";
             validAccount = false;
             
         }if (jTextField1.getText().equals("")||jTextField2.getText().equals("")){
-            System.out.println("Name and surname cant be empty");
+            
+            errorMessage = errorMessage + "Name and surname cant be empty\n";
+            validAccount = false;
+
+        }
+        //DOB checking
+        // Get selected date
+        Date dateOB = dateCalendar.getDate();
+        if (!(dateOB == null)) {
+            //current date
+            LocalDate validDOB = LocalDate.now().minusYears(18);
+            validDOB.plusDays(1);
+            // Convert LocalDate to java.util.Date
+            Date date = Date.from(validDOB.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+            if (dateOB.after(date)) {
+                errorMessage = errorMessage + "You ust  over 18 to own a DeltaPMS account\n";
+            }
+            
+        }else{
+            validAccount = false;
+        }
+
+        if (!validAccount) {
+            JOptionPane.showMessageDialog(this, errorMessage, "Account Error", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
