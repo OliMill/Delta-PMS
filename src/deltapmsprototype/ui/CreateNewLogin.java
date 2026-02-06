@@ -4,7 +4,9 @@
  */
 package deltapmsprototype.ui;
 
+import com.deltapms.utils.EmailService;
 import com.deltapms.utils.PasswordHasher;
+import com.hotelmanagement.dao.DataManager;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -55,14 +57,6 @@ public class CreateNewLogin extends javax.swing.JPanel {
 
     }
 
-    private boolean isValidEmail(String email) {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        java.util.regex.Pattern pat = java.util.regex.Pattern.compile(emailRegex);
-        if (email == null) {
-            return false;
-        }
-        return pat.matcher(email).matches();
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -320,22 +314,25 @@ public class CreateNewLogin extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         boolean validAccount = true;
         String errorMessage = "missing requirements:\n";
-        if (!isValidEmail(jTextField4.getText())){
+        if (!EmailService.isValidEmail(jTextField4.getText())) {
             errorMessage = errorMessage + "inValid email\n";
             validAccount = false;
-        //requirements checking    
-        }if (!(PasswordHasher.securePassword(new String(jPasswordField1.getPassword())).equals(""))){
-            
-            errorMessage = errorMessage + "Missing following password requirements:\n"+PasswordHasher.securePassword(new String(jPasswordField1.getPassword())) +"\n";
+            //requirements checking    
+        }
+        if (!(PasswordHasher.securePassword(new String(jPasswordField1.getPassword())).equals(""))) {
+
+            errorMessage = errorMessage + "Missing following password requirements:\n" + PasswordHasher.securePassword(new String(jPasswordField1.getPassword())) + "\n";
             validAccount = false;
-           
-        }if (!Arrays.equals(jPasswordField1.getPassword(), jPasswordField2.getPassword())){
-            
+
+        }
+        if (!Arrays.equals(jPasswordField1.getPassword(), jPasswordField2.getPassword())) {
+
             errorMessage = errorMessage + "passwords dont match\n";
             validAccount = false;
-            
-        }if (jTextField1.getText().equals("")||jTextField2.getText().equals("")){
-            
+
+        }
+        if (jTextField1.getText().equals("") || jTextField2.getText().equals("")) {
+
             errorMessage = errorMessage + "Name and surname cant be empty\n";
             validAccount = false;
 
@@ -353,13 +350,25 @@ public class CreateNewLogin extends javax.swing.JPanel {
             if (dateOB.after(date)) {
                 errorMessage = errorMessage + "You ust  over 18 to own a DeltaPMS account\n";
             }
-            
-        }else{
+
+        } else {
             validAccount = false;
         }
 
         if (!validAccount) {
             JOptionPane.showMessageDialog(this, errorMessage, "Account Error", JOptionPane.ERROR_MESSAGE);
+        } else {
+            //sending email confirmation to use inbox
+            String code = EmailService.sendEmailConfirmation(jTextField4.getText());
+
+            String input = JOptionPane.showInputDialog("A confirmation code was sent to your inbox please ener it below");
+
+            if (code.compareTo(input) == 0) {
+                JOptionPane.showMessageDialog(null, "Code Matches, redirecting you shortly");
+                //DataManager.addNewCustomer();
+            } else {
+                JOptionPane.showMessageDialog(null, "Code Incorrect, please try again");
+            }
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 

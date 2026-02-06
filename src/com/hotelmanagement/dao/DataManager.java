@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
 
 public class DataManager {
 
-    private static List<Customer> customers = new ArrayList<>();
-    private static List<Room> rooms = new ArrayList<>();
-    private static List<RoomType> roomTypes = new ArrayList<>();
-    private static List<Booking> bookings = new ArrayList<>();
-    private static List<Staff> staff = new ArrayList<>();
-    private static List<Staff> managers = new ArrayList<>();
+    private static final List<Customer> customers = new ArrayList<>();
+    private static final List<Room> rooms = new ArrayList<>();
+    private static final List<RoomType> roomTypes = new ArrayList<>();
+    private static final List<Booking> bookings = new ArrayList<>();
+    private static final List<Staff> staff = new ArrayList<>();
+    private static final List<Staff> managers = new ArrayList<>();
 
     // Initialising all the data
     public static void loadDataFromDatabase() {
@@ -35,7 +35,6 @@ public class DataManager {
         } catch (SQLException e) {
             // Print a clean error message if loading fails
             System.err.println("Failed to load data from database:");
-            e.printStackTrace();
         }
     }
 
@@ -282,4 +281,29 @@ public class DataManager {
     public static List<Staff> getManagers() {
         return managers;
     }
-}
+
+    public static void addNewCustomer(String firstName, String lastName, LocalDate DOB, String email, String passwordHash) {
+        String insertSql = "INSERT INTO Customer (FirstName, LastName, DOB, Email, PasswordHash) VALUES (?, ?, ?, ?, ?)";
+
+        //try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+
+         //   pstmt.setInt(1, customerId);
+         //   pstmt.setInt(2, roomId);
+         //   pstmt.setDate(3, java.sql.Date.valueOf(checkIn));
+         //   pstmt.setDate(4, java.sql.Date.valueOf(checkOut));
+         //   pstmt.setDate(5, new java.sql.Date(System.currentTimeMillis()));
+
+         //   int rowsAffected = pstmt.executeUpdate();
+
+         //   if (rowsAffected > 0) {
+         //       loadDataFromDatabase();
+         //   }
+        }
+    }
+    
+//rs.getString("FirstName"),
+    
+////                        rs.getString("LastName"),
+//                        rs.getDate("DOB").toLocalDate(),
+ //                       rs.getString("Email"),
+ //                       rs.getString("PasswordHash")
