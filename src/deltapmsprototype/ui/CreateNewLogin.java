@@ -365,7 +365,7 @@ public class CreateNewLogin extends javax.swing.JPanel {
 
             if (code.compareTo(input) == 0) {
                 JOptionPane.showMessageDialog(null, "Code Matches, redirecting you shortly");
-                //DataManager.addNewCustomer();
+                DataManager.addNewCustomer(jTextField1.getText(),jTextField2.getText(),dateOB,jTextField4.getText(),jPasswordField1.getPassword());
             } else {
                 JOptionPane.showMessageDialog(null, "Code Incorrect, please try again");
             }

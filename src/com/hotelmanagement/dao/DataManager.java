@@ -2,9 +2,12 @@ package com.hotelmanagement.dao;
 
 import com.hotelmanagement.models.*;
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import static java.time.temporal.TemporalQueries.localDate;
 import java.util.stream.Collectors;
 
 public class DataManager {
@@ -282,27 +285,30 @@ public class DataManager {
         return managers;
     }
 
-    public static void addNewCustomer(String firstName, String lastName, LocalDate DOB, String email, String passwordHash) {
+    public static void addNewCustomer(String firstName, String lastName, java.util.Date DOB, String email, String passwordHash) throws SQLException {
         String insertSql = "INSERT INTO Customer (FirstName, LastName, DOB, Email, PasswordHash) VALUES (?, ?, ?, ?, ?)";
+        LocalDate date = DOB.toInstant()
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
+        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
 
-        //try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
+            pstmt.setString(1, firstName);
+            pstmt.setString(2, lastName);
+            pstmt.setDate(3, java.sql.Date.valueOf(date));
+            pstmt.setString(4, email);
+            pstmt.setString(5, passwordHash);
 
-         //   pstmt.setInt(1, customerId);
-         //   pstmt.setInt(2, roomId);
-         //   pstmt.setDate(3, java.sql.Date.valueOf(checkIn));
-         //   pstmt.setDate(4, java.sql.Date.valueOf(checkOut));
-         //   pstmt.setDate(5, new java.sql.Date(System.currentTimeMillis()));
-
-         //   int rowsAffected = pstmt.executeUpdate();
-
-         //   if (rowsAffected > 0) {
-         //       loadDataFromDatabase();
-         //   }
+            int rowsAffected = pstmt.executeUpdate();
+            
+            if (rowsAffected > 0) {
+            loadDataFromDatabase();
+            }
         }
     }
-    
+}
+
 //rs.getString("FirstName"),
-    
+
 ////                        rs.getString("LastName"),
 //                        rs.getDate("DOB").toLocalDate(),
  //                       rs.getString("Email"),
