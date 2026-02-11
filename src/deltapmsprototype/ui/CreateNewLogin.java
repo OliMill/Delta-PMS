@@ -7,6 +7,7 @@ package deltapmsprototype.ui;
 import com.deltapms.utils.EmailService;
 import com.deltapms.utils.PasswordHasher;
 import com.hotelmanagement.dao.DataManager;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -348,7 +349,7 @@ public class CreateNewLogin extends javax.swing.JPanel {
             Date date = Date.from(validDOB.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
             if (dateOB.after(date)) {
-                errorMessage = errorMessage + "You ust  over 18 to own a DeltaPMS account\n";
+                errorMessage = errorMessage + "You must be over 18 to own a DeltaPMS account\n";
             }
 
         } else {
@@ -364,8 +365,30 @@ public class CreateNewLogin extends javax.swing.JPanel {
             String input = JOptionPane.showInputDialog("A confirmation code was sent to your inbox please ener it below");
 
             if (code.compareTo(input) == 0) {
-                JOptionPane.showMessageDialog(null, "Code Matches, redirecting you shortly");
-                DataManager.addNewCustomer(jTextField1.getText(),jTextField2.getText(),dateOB,jTextField4.getText(),jPasswordField1.getPassword());
+
+                try {
+                    DataManager.addNewCustomer(jTextField1.getText(), jTextField2.getText(), dateOB, jTextField4.getText(), PasswordHasher.hashPassword(new String(jPasswordField1.getPassword())));
+                    JOptionPane.showMessageDialog(null, "Code Matches, redirecting you shortly");
+                    MainApplication.showPanel("MainApplicationFrame");
+                
+                    } catch (java.sql.SQLException ex) {
+                    // Check for Duplicate Entry (SQLState 23000 or MySQL code 1062)
+                    if (ex.getErrorCode() == 1062 || "23000".equals(ex.getSQLState())) {
+                        javax.swing.JOptionPane.showMessageDialog(
+                                this,
+                                "This email is already in use. Please try another.",
+                                "Duplicate Email",
+                                javax.swing.JOptionPane.WARNING_MESSAGE
+                        );
+                    } // Handle all other SQL errors
+                    else {
+                        javax.swing.JOptionPane.showMessageDialog(this, "Database Error: " + ex.getMessage());
+
+                        // Fixed the ambiguous log by explicitly defining the message as a String
+                        System.getLogger(CreateNewLogin.class.getName())
+                                .log(System.Logger.Level.ERROR, "Database exception occurred", ex);
+                    }
+                }
             } else {
                 JOptionPane.showMessageDialog(null, "Code Incorrect, please try again");
             }
