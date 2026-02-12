@@ -10,6 +10,7 @@ public class Customer {
     private String email;
     private String passwordHash;
 
+    //customer model
     public Customer(int customerID, String firstName, String lastName, LocalDate dob,
     String email,String passwordHash) {
         this.customerID = customerID;
@@ -20,6 +21,7 @@ public class Customer {
         this.passwordHash = passwordHash;
     }
 
+    // getters
     public int getCustomerID() {
         return customerID;
     }
@@ -44,6 +46,7 @@ public class Customer {
         return passwordHash;
     }
     
+    // setters
     public void setCustomerID(int customerID) {
         this.customerID = customerID;
     }

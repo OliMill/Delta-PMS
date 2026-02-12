@@ -14,10 +14,10 @@ public class RoomType {
     private double pricePerNight;
     private String roomName;
 
-    
-    public RoomType(int roomTypeID, int bathrooms, int singleBeds, int doubleBeds, 
-                   boolean hasDesk, boolean hasBath, boolean hasShower, boolean hasTV, 
-                   boolean hasCoffee, boolean hasDepositBox, double pricePerNight, String roomName) {
+    //RoomType model
+    public RoomType(int roomTypeID, int bathrooms, int singleBeds, int doubleBeds,
+            boolean hasDesk, boolean hasBath, boolean hasShower, boolean hasTV,
+            boolean hasCoffee, boolean hasDepositBox, double pricePerNight, String roomName) {
         this.roomTypeID = roomTypeID;
         this.bathrooms = bathrooms;
         this.singleBeds = singleBeds;
@@ -32,7 +32,7 @@ public class RoomType {
         this.roomName = roomName;
 
     }
-
+    //getters
     public int getRoomTypeID() {
         return roomTypeID;
     }
@@ -81,7 +81,7 @@ public class RoomType {
         return roomName;
     }
     
-
+    // setters
     public void setRoomTypeID(int roomTypeID) {
         this.roomTypeID = roomTypeID;
     }

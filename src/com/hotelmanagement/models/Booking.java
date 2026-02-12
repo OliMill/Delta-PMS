@@ -10,6 +10,7 @@ public class Booking {
     private LocalDate checkOutDate;
     private LocalDate dateMade;
     
+    // booking model 
     public Booking(int bookingID, int customerID, int roomNo, LocalDate checkInDate, LocalDate checkOutDate, LocalDate dateMade) {
         this.bookingID = bookingID;
         this.customerID = customerID;
@@ -18,7 +19,7 @@ public class Booking {
         this.checkOutDate = checkOutDate;
         this.dateMade = dateMade;
     }
-
+    //getters
     public int getBookingID() {
         return bookingID;
     }
@@ -43,7 +44,7 @@ public class Booking {
         return dateMade;
     }
     
-
+    // setters
     public void setBookingID(int bookingID) {
         this.bookingID = bookingID;
     }

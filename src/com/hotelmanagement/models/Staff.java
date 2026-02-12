@@ -11,6 +11,7 @@ public class Staff {
     private String passwordHash;
     private String job;
     
+    // Staff model
     public Staff(int staffID, String firstName, String lastName, LocalDate dob, 
                  String email, String passwordHash, String job) {
         this.staffID = staffID;
@@ -22,6 +23,7 @@ public class Staff {
         this.job = job;
     }
 
+    //getters 
     public int getStaffID() {
         return staffID;
     }
@@ -50,6 +52,7 @@ public class Staff {
         return job;
     }
 
+    //setters
     public void setStaffID(int staffID) {
         this.staffID = staffID;
     }

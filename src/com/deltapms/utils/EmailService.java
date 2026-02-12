@@ -56,6 +56,7 @@ public class EmailService {
             Transport.send(message);
 
         } catch (SendFailedException e) {
+            //catch exceptions
             System.err.println("Server rejected the address format: " + recipientEmail);
         } catch (MessagingException e) {
             System.err.println("SMTP/Connection Error: " + e.getMessage());
@@ -83,7 +84,7 @@ public class EmailService {
             // Generate a random 6-digit code
             String code = String.valueOf((int) ((Math.random() * 900000) + 100000));
 
-            // HTML Email body
+            // HTML Email body nice formatting
             String htmlContent
                     = "<div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; "
                     + "border: 1px solid #e0e0e0; border-radius: 8px; padding: 20px;'>"

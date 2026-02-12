@@ -25,7 +25,7 @@ public class PasswordHasher {
     }
 
     public static boolean verifyPassword(String plainTextPassword, String hashedPassword) {
-        // You must add the same pepper during verification
+        // add the same pepper during verification
         String passwordWithPepper = plainTextPassword + PEPPER;
         return BCrypt.checkpw(passwordWithPepper, hashedPassword);
     }

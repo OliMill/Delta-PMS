@@ -10,14 +10,14 @@ public class Room {
     this.roomTypeID = roomTypeID;
     
     //Search for the matching type in your data manager
-    for (com.hotelmanagement.models.RoomType rt : com.hotelmanagement.dao.DataManager.getRoomTypes()) {
-        if (rt.getRoomTypeID() == roomTypeID) {
-            this.roomType = rt;
-            break;
+        for (com.hotelmanagement.models.RoomType rt : com.hotelmanagement.dao.DataManager.getRoomTypes()) {
+            if (rt.getRoomTypeID() == roomTypeID) {
+                this.roomType = rt;
+                break;
+            }
         }
     }
-    }
-
+    //getters
     public int getRoomNo() {
         return roomNo;
     }

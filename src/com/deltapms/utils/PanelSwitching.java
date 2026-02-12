@@ -28,7 +28,7 @@ public class PanelSwitching {
     }
 
     public void returnPanel() {
-        // We need at least 2 items
+        // We need at least 2 items in order to return
         if (panelStack.size() > 1) {
             try {
                 panelStack.pop(); // Remove current panel
@@ -38,7 +38,8 @@ public class PanelSwitching {
                 System.err.println("Error returning to panel: " + e.getMessage());
             }
         } else {
-            System.out.println("Already at the root panel.");
+            //in case of stack issues
+            System.err.println("Already at the root panel.");
         }
     }
 

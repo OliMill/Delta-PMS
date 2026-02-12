@@ -2,12 +2,10 @@ package com.hotelmanagement.dao;
 
 import com.hotelmanagement.models.*;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import static java.time.temporal.TemporalQueries.localDate;
 import java.util.stream.Collectors;
 
 public class DataManager {
@@ -36,7 +34,7 @@ public class DataManager {
             loadRooms(conn);
             loadBookings(conn);
         } catch (SQLException e) {
-            // Print a clean error message if loading fails
+            // Print a error message if loading fails
             System.err.println("Failed to load data from database:");
         }
     }
@@ -67,7 +65,7 @@ public class DataManager {
             }
         }
     }
-
+    //load from DB all customers
     private static void loadCustomers(Connection conn) throws SQLException {
         String sql = "SELECT * FROM Customer";
         try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
@@ -84,7 +82,7 @@ public class DataManager {
             }
         }
     }
-
+    //load from DB all RoomTypes
     private static void loadRoomTypes(Connection conn) throws SQLException {
         String sql = "SELECT * FROM RoomType";
         try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
@@ -108,7 +106,7 @@ public class DataManager {
             }
         }
     }
-
+//load from DB all rooms
     private static void loadRooms(Connection conn) throws SQLException {
         String sql = "SELECT * FROM Rooms";
         try (PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
@@ -121,7 +119,7 @@ public class DataManager {
             }
         }
     }
-
+    //load from DB all bookings
     private static void loadBookings(Connection conn) throws SQLException {
     String sql = "SELECT * FROM Booking";
     try (PreparedStatement stmt = conn.prepareStatement(sql);
@@ -140,7 +138,7 @@ public class DataManager {
             }
         }
     }
-
+    //create a new booking in the database
     public static boolean createBooking(int customerId, int roomId, LocalDate checkIn,
             LocalDate checkOut, double totalPrice) {
 
@@ -197,7 +195,7 @@ public class DataManager {
             return false;
         }
     }
-
+    //remove a booking
     public static boolean deleteBooking(int bookingID) {
         String sql = "DELETE FROM Booking WHERE BookingID = ?";
         try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -216,7 +214,7 @@ public class DataManager {
     public static List<Customer> getCustomers() {
         return customers;
     }
-
+    //search for customer
     private static String getCustomerEmailById(int id) {
         String email = "";
         String sql = "SELECT Email FROM Customer WHERE CustomerID = ?";
@@ -234,7 +232,8 @@ public class DataManager {
         }
         return email;
     }
-
+    //getters
+    
     public static List<Room> getRooms() {
         return rooms;
     }
@@ -284,7 +283,7 @@ public class DataManager {
     public static List<Staff> getManagers() {
         return managers;
     }
-
+    //add new customre to database
     public static void addNewCustomer(String firstName, String lastName, java.util.Date DOB, String email, String passwordHash) throws SQLException {
         String insertSql = "INSERT INTO Customer (FirstName, LastName, DOB, Email, PasswordHash) VALUES (?, ?, ?, ?, ?)";
         LocalDate date = DOB.toInstant()
@@ -306,10 +305,3 @@ public class DataManager {
         }
     }
 }
-
-//rs.getString("FirstName"),
-
-////                        rs.getString("LastName"),
-//                        rs.getDate("DOB").toLocalDate(),
- //                       rs.getString("Email"),
- //                       rs.getString("PasswordHash")
