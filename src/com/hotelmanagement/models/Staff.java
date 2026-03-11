@@ -2,83 +2,40 @@ package com.hotelmanagement.models;
 
 import java.time.LocalDate;
 
-public class Staff {
-    private int staffID;
-    private String firstName;
-    private String lastName;
-    private LocalDate dob;
-    private String email;
-    private String passwordHash;
+public class Staff extends User {
     private String job;
-    
-    // Staff model
+
     public Staff(int staffID, String firstName, String lastName, LocalDate dob, 
                  String email, String passwordHash, String job) {
-        this.staffID = staffID;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.dob = dob;
-        this.email = email;
-        this.passwordHash = passwordHash;
+        // Pass shared attributes up to the User constructor
+        super(staffID, firstName, lastName, dob, email, passwordHash);
+        
+        // staff job
         this.job = job;
     }
 
-    //getters 
-    public int getStaffID() {
-        return staffID;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public LocalDate getDob() {
-        return dob;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
+    // Getters
     public String getRole() {
         return job;
-    }
-
-    //setters
-    public void setStaffID(int staffID) {
-        this.staffID = staffID;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setDob(LocalDate dob) {
-        this.dob = dob;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
     }
 
     public void setJob(String job) {
         this.job = job;
     }
+
+    // Wrapper for backwards compatability
+    public int getStaffID() {
+        return super.getId();
+    }
+
+    public void setStaffID(int staffID) {
+        super.setId(staffID);
+    }
+}
+    //Setter
+    public void setJob(String job) {
+        this.job = job;
+    }
     
+
 }
