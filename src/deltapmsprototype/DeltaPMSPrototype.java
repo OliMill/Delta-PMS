@@ -4,7 +4,7 @@ import com.hotelmanagement.dao.DataManager;
 import deltapmsprototype.ui.MainApplicationFrame;
 import javax.swing.JOptionPane; 
 import com.formdev.flatlaf.FlatDarculaLaf;
-
+import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMTMaterialDarkerIJTheme;
 public class DeltaPMSPrototype {
     /**
      * @param args the command line arguments
@@ -17,7 +17,7 @@ public class DeltaPMSPrototype {
 
             try {
                 // Load the theme
-                FlatDarculaLaf.setup();
+                FlatMTMaterialDarkerIJTheme.setup();
             } catch (Exception e) {
                 System.err.println("Couldn't load FlatLaf: " + e.getMessage());
             }

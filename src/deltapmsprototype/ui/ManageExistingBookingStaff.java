@@ -23,6 +23,7 @@ import com.hotelmanagement.models.Room;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.List;
+import javax.swing.UIManager;
 
 public class ManageExistingBookingStaff extends javax.swing.JPanel {
 
@@ -106,7 +107,6 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
         // Formatting
         jTable1.setRowHeight(40);
         jTable1.setShowGrid(true);
-        jTable1.setGridColor(new Color(230, 230, 230));
         jTable1.getTableHeader().setReorderingAllowed(false);
 
         // Mouse Listener for "Clicking each stay"
@@ -130,7 +130,7 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
 
         JPopupMenu popup = new JPopupMenu();
 
-        // --- 1. CANCEL ITEM ---
+        // CANCEL ITEM 
         JMenuItem cancelItem = new JMenuItem("Cancel Booking (ID: " + booking.getBookingID() + ")");
         cancelItem.addActionListener(event -> {
             handleCancelBooking(booking, guestName);
@@ -197,7 +197,7 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
         jButton15.setFont(new java.awt.Font("Arial Narrow", 0, 24)); // NOI18N
         jButton15.setForeground(new java.awt.Color(242, 68, 29));
         jButton15.setText("Return");
-        jButton15.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED), javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED)));
+        jButton15.setBorder(null);
         jButton15.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton15ActionPerformed(evt);
@@ -287,10 +287,15 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
         gridBagConstraints.weighty = 0.5;
         jPanel20.add(jLabel2, gridBagConstraints);
 
-        jButton1.setText("jButton1");
+        jButton1.setText("Refresh tasble");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton1MouseClicked(evt);
+            }
+        });
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -308,6 +313,11 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
         jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 jButton2MouseClicked(evt);
+            }
+        });
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -384,6 +394,14 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         setupCustomTable();
     }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton15ActionPerformed
         MainApplication1.switcher.returnPanel();
@@ -481,67 +499,81 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
 
     class BookingRenderer extends DefaultTableCellRenderer {
 
-        // Soft pastel colors
-        private final Color[] colors = {
+        // Light theme colors
+        private final Color[] lightColors = {
             new Color(152, 251, 152), // Pale Green
             new Color(135, 206, 250), // Light Sky Blue
             new Color(255, 182, 193), // Light Pink
             new Color(255, 218, 185) // Peach
         };
 
+        // Dark theme colors
+        private final Color[] darkColors = {
+            new Color(45, 90, 45), // Muted Green
+            new Color(30, 75, 110), // Muted Blue
+            new Color(110, 50, 65), // Muted Pink/Red
+            new Color(110, 75, 45) // Muted Peach/Orange
+        };
+
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus,
-                int row, int column) {
+                boolean isSelected, boolean hasFocus, int row, int column) {
 
             JLabel c = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            // Dynamically detect if the current theme is Dark Mode
+            Color bg = table.getBackground();
+            boolean isDarkMode = (bg.getRed() * 0.299 + bg.getGreen() * 0.587 + bg.getBlue() * 0.114) < 128;
+            Color[] activeColors = isDarkMode ? darkColors : lightColors;
 
             // Reset base styles
             c.setBorder(BorderFactory.createEmptyBorder());
             c.setHorizontalAlignment(SwingConstants.LEFT);
             c.setText("");
 
-            // --- HEADER COLUMN (Room Number) ---
+            // HEADER COLUMN (Room Number)
             if (column == 0) {
-                c.setBackground(new Color(240, 240, 240));
-                c.setForeground(Color.BLACK);
+                // Use the theme's native panel background
+                c.setBackground(UIManager.getColor("Panel.background"));
+                c.setForeground(UIManager.getColor("Label.foreground"));
                 c.setFont(c.getFont().deriveFont(Font.BOLD));
                 c.setText((String) value);
                 return c;
             }
 
-            // --- DATA COLUMNS ---
+            // DATA COLUMNS
             if (value instanceof Booking b) {
 
-                // Color based on BookingID to keep it consistent across the bar
-                int colorIndex = Math.abs(b.getBookingID()) % colors.length;
-                c.setBackground(colors[colorIndex]);
-                c.setForeground(Color.DARK_GRAY);
+                // Only apply custom booking colors if the cell IS NOT selected
+                if (!isSelected) {
+                    int colorIndex = Math.abs(b.getBookingID()) % activeColors.length;
+                    c.setBackground(activeColors[colorIndex]);
+                    c.setForeground(isDarkMode ? Color.WHITE : Color.DARK_GRAY);
+                }
 
-                // Determine if this cell is the "Start Date" cell
-                // We check if the column's date matches the booking's check-in date
+                // Determine if this cell is the "Start Date"
                 LocalDate colDate = startDateDisplay.plusDays(column - 1);
 
                 if (colDate.isEqual(b.getCheckInDate())) {
-                    // It is the start date: Show Guest Name
                     String guestName = customerNameMap.getOrDefault(b.getCustomerID(), "ID: " + b.getCustomerID());
                     c.setText("  " + guestName);
                     c.setFont(c.getFont().deriveFont(Font.BOLD, 10f));
                 } else if (column == 1 && colDate.isAfter(b.getCheckInDate())) {
-                    // Edge case: If the booking started BEFORE the visible table (scroll start), 
-                    // show the name in the very first visible column (index 1) so we know who it is.
                     String guestName = customerNameMap.getOrDefault(b.getCustomerID(), "ID: " + b.getCustomerID());
                     c.setText("  " + guestName + " (cont.)");
                     c.setFont(c.getFont().deriveFont(Font.PLAIN, 10f));
                 }
 
             } else {
-                // Empty Room
-                c.setBackground(Color.WHITE);
-                c.setText("");
+                // Empty Room:
+                if (!isSelected) {
+                    c.setBackground(table.getBackground());
+                    c.setForeground(table.getForeground());
+                }
             }
 
             return c;
         }
     }
 }
+
