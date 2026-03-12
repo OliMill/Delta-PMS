@@ -7,7 +7,7 @@ public class Staff extends User {
 
     public Staff(int staffID, String firstName, String lastName, LocalDate dob, 
                  String email, String passwordHash, String job) {
-        // Pass shared attributes up to the User constructor
+        // Pass attributes to the User constructor
         super(staffID, firstName, lastName, dob, email, passwordHash);
         
         // staff job
@@ -31,11 +31,4 @@ public class Staff extends User {
     public void setStaffID(int staffID) {
         super.setId(staffID);
     }
-}
-    //Setter
-    public void setJob(String job) {
-        this.job = job;
-    }
-    
-
 }

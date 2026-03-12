@@ -3,34 +3,33 @@ package deltapmsprototype;
 import com.hotelmanagement.dao.DataManager; 
 import deltapmsprototype.ui.MainApplicationFrame;
 import javax.swing.JOptionPane; 
-import com.deltapms.utils.PasswordHasher;
-/*
-* EXAMPLE CUSTOMER LOGINS FOR TESTING
-*1	James	Williams	1978-05-10	james.w@email.com	jwilliams	cust_hash_1
-*2	Maria	Garcia	1985-11-23	maria.g@email.com	mgarcia	cust_hash_2
-*EXAMPLE STAFF LOGINS FOR TESTING
-*1	John	Smith	1985-03-15	john.smith@hotel.com	jsmith	hashed_pass_1	Manager
-*2	Sarah	Johnson	1990-07-22	sarah.j@hotel.com	sjohnson	hashed_pass_2	Receptionist
-*/
+import com.formdev.flatlaf.FlatDarculaLaf;
+
 public class DeltaPMSPrototype {
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        System.out.println(PasswordHasher.hashPassword("hashed_pass_1"));
         try {
             //attempt to load all data from database
             DataManager.loadDataFromDatabase();
             //load GUI when complete
+
+            try {
+                // Load the theme
+                FlatDarculaLaf.setup();
+            } catch (Exception e) {
+                System.err.println("Couldn't load FlatLaf: " + e.getMessage());
+            }
+
             java.awt.EventQueue.invokeLater(() -> {
                 new MainApplicationFrame().setVisible(true);
             });
-            
 
         } catch (Exception e) {
             // If any error occurs during connection or loading
             System.err.println("Application failed to start: " + e.getMessage());
-            
+
             // Show a user-friendly error dialog
             JOptionPane.showMessageDialog(
                 null,
