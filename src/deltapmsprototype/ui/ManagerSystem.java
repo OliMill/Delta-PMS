@@ -5,6 +5,8 @@
 package deltapmsprototype.ui;
 
 import com.deltapms.utils.PanelSwitching;
+import java.awt.Color;
+import javax.swing.UIManager;
 
 /**
  *
@@ -221,14 +223,15 @@ public class ManagerSystem extends javax.swing.JPanel {
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         String[] themeNames = {
-            "Material Darker", "Flat Dark", "Flat Darcula", "Flat Light", "Flat IntelliJ"
+            "Material Darker", "Flat Dark", "Flat Darcula", "Flat Light", "Flat IntelliJ", "Dark Purple"
         };
         String[] themeClasses = {
             "com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMTMaterialDarkerIJTheme",
             "com.formdev.flatlaf.FlatDarkLaf",
             "com.formdev.flatlaf.FlatDarculaLaf",
             "com.formdev.flatlaf.FlatLightLaf",
-            "com.formdev.flatlaf.FlatIntelliJLaf"
+            "com.formdev.flatlaf.FlatIntelliJLaf",
+            "com.formdev.flatlaf.intellijthemes.FlatDarkPurpleIJTheme"
         };
 
         String choice = (String) javax.swing.JOptionPane.showInputDialog(
@@ -241,13 +244,21 @@ public class ManagerSystem extends javax.swing.JPanel {
             for (int i = 0; i < themeNames.length; i++) {
                 if (themeNames[i].equals(choice)) {
                     try {
+                        // Set custom colours
+                        // Set custom colours BEFORE applying the theme
                         javax.swing.UIManager.setLookAndFeel(themeClasses[i]);
+
+                        // Must disable unifiedBackground
+                        javax.swing.UIManager.put("TitlePane.unifiedBackground", false);
+                        javax.swing.UIManager.put("TitlePane.background", new javax.swing.plaf.ColorUIResource(89, 4, 20));
+                        javax.swing.UIManager.put("TitlePane.foreground", new javax.swing.plaf.ColorUIResource(255, 255, 255));
+                        javax.swing.UIManager.put("TitlePane.buttonHoverBackground", new javax.swing.plaf.ColorUIResource(242, 68, 29));
+
                         for (java.awt.Window w : java.awt.Window.getWindows()) {
                             javax.swing.SwingUtilities.updateComponentTreeUI(w);
                             w.revalidate();
                             w.repaint();
                         }
-                        // Run after UI updates
                         javax.swing.SwingUtilities.invokeLater(() -> {
                             for (java.awt.Window w : java.awt.Window.getWindows()) {
                                 if (w instanceof javax.swing.JFrame jFrame) {
@@ -255,6 +266,7 @@ public class ManagerSystem extends javax.swing.JPanel {
                                 }
                             }
                         });
+
                     } catch (Exception ex) {
                         javax.swing.JOptionPane.showMessageDialog(this, "Failed to apply theme.");
                     }

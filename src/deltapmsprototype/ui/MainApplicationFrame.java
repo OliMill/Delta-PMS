@@ -391,13 +391,21 @@ public class MainApplicationFrame extends javax.swing.JFrame {
             for (int i = 0; i < themeNames.length; i++) {
                 if (themeNames[i].equals(choice)) {
                     try {
+                        // Set custom colours
+                        // Set custom colours BEFORE applying the theme
                         javax.swing.UIManager.setLookAndFeel(themeClasses[i]);
+
+                        // Must disable unifiedBackground
+                        javax.swing.UIManager.put("TitlePane.unifiedBackground", false);
+                        javax.swing.UIManager.put("TitlePane.background", new javax.swing.plaf.ColorUIResource(89, 4, 20));
+                        javax.swing.UIManager.put("TitlePane.foreground", new javax.swing.plaf.ColorUIResource(255, 255, 255));
+                        javax.swing.UIManager.put("TitlePane.buttonHoverBackground", new javax.swing.plaf.ColorUIResource(242, 68, 29));
+
                         for (java.awt.Window w : java.awt.Window.getWindows()) {
                             javax.swing.SwingUtilities.updateComponentTreeUI(w);
                             w.revalidate();
                             w.repaint();
                         }
-                        // Run after UI updates
                         javax.swing.SwingUtilities.invokeLater(() -> {
                             for (java.awt.Window w : java.awt.Window.getWindows()) {
                                 if (w instanceof javax.swing.JFrame jFrame) {
@@ -405,6 +413,7 @@ public class MainApplicationFrame extends javax.swing.JFrame {
                                 }
                             }
                         });
+
                     } catch (Exception ex) {
                         javax.swing.JOptionPane.showMessageDialog(this, "Failed to apply theme.");
                     }

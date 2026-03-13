@@ -18,6 +18,11 @@ public class DeltaPMSPrototype {
             try {
                 // Load the theme
                 FlatMTMaterialDarkerIJTheme.setup();
+                javax.swing.UIManager.put("TitlePane.unifiedBackground", false);
+                javax.swing.UIManager.put("TitlePane.background", new javax.swing.plaf.ColorUIResource(89, 4, 20));
+                javax.swing.UIManager.put("TitlePane.foreground", new javax.swing.plaf.ColorUIResource(255, 255, 255));
+                javax.swing.UIManager.put("TitlePane.buttonHoverBackground", new javax.swing.plaf.ColorUIResource(242, 68, 29));
+                
             } catch (Exception e) {
                 System.err.println("Couldn't load FlatLaf: " + e.getMessage());
             }
