@@ -53,7 +53,7 @@ public class StaffSystem extends javax.swing.JPanel {
         jButton14.setFont(new java.awt.Font("Arial Narrow", 0, 24)); // NOI18N
         jButton14.setForeground(new java.awt.Color(242, 68, 29));
         jButton14.setText("Sign Out");
-        jButton14.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createEtchedBorder(null), javax.swing.BorderFactory.createBevelBorder(null)));
+        jButton14.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED), javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED)));
         jButton14.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton14ActionPerformed(evt);
@@ -70,7 +70,11 @@ public class StaffSystem extends javax.swing.JPanel {
 
         jPanel11.setBackground(new java.awt.Color(89, 4, 20));
 
+        jButton3.setBackground(new java.awt.Color(89, 4, 20));
+        jButton3.setFont(new java.awt.Font("Arial Narrow", 0, 24)); // NOI18N
+        jButton3.setForeground(new java.awt.Color(242, 68, 29));
         jButton3.setText("Theme");
+        jButton3.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -81,17 +85,13 @@ public class StaffSystem extends javax.swing.JPanel {
         jPanel11.setLayout(jPanel11Layout);
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 122, Short.MAX_VALUE)
-            .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE))
+            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 66, Short.MAX_VALUE)
-            .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel11Layout.createSequentialGroup()
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
-                    .addContainerGap()))
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -183,7 +183,48 @@ public class StaffSystem extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton14ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+        String[] themeNames = {
+            "Material Darker", "Flat Dark", "Flat Darcula", "Flat Light", "Flat IntelliJ"
+        };
+        String[] themeClasses = {
+            "com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMTMaterialDarkerIJTheme",
+            "com.formdev.flatlaf.FlatDarkLaf",
+            "com.formdev.flatlaf.FlatDarculaLaf",
+            "com.formdev.flatlaf.FlatLightLaf",
+            "com.formdev.flatlaf.FlatIntelliJLaf"
+        };
+
+        String choice = (String) javax.swing.JOptionPane.showInputDialog(
+                this, "Select a theme:", "Theme",
+                javax.swing.JOptionPane.PLAIN_MESSAGE,
+                null, themeNames, themeNames[0]
+        );
+
+        if (choice != null) {
+            for (int i = 0; i < themeNames.length; i++) {
+                if (themeNames[i].equals(choice)) {
+                    try {
+                        javax.swing.UIManager.setLookAndFeel(themeClasses[i]);
+                        for (java.awt.Window w : java.awt.Window.getWindows()) {
+                            javax.swing.SwingUtilities.updateComponentTreeUI(w);
+                            w.revalidate();
+                            w.repaint();
+                        }
+                        // Run after UI updates
+                        javax.swing.SwingUtilities.invokeLater(() -> {
+                            for (java.awt.Window w : java.awt.Window.getWindows()) {
+                                if (w instanceof javax.swing.JFrame jFrame) {
+                                    jFrame.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+                                }
+                            }
+                        });
+                    } catch (Exception ex) {
+                        javax.swing.JOptionPane.showMessageDialog(this, "Failed to apply theme.");
+                    }
+                    break;
+                }
+            }
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
 

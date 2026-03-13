@@ -41,6 +41,7 @@ public class ManagerSystem extends javax.swing.JPanel {
         jPanel9 = new javax.swing.JPanel();
         jButton14 = new javax.swing.JButton();
         jPanel11 = new javax.swing.JPanel();
+        jButton6 = new javax.swing.JButton();
 
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
@@ -124,15 +125,28 @@ public class ManagerSystem extends javax.swing.JPanel {
 
         jPanel11.setBackground(new java.awt.Color(89, 4, 20));
 
+        jButton6.setBackground(new java.awt.Color(89, 4, 20));
+        jButton6.setFont(new java.awt.Font("Arial Narrow", 0, 24)); // NOI18N
+        jButton6.setForeground(new java.awt.Color(242, 68, 29));
+        jButton6.setText("Theme");
+        jButton6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         gridBagConstraints = new java.awt.GridBagConstraints();
@@ -190,7 +204,7 @@ public class ManagerSystem extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton2MouseClicked
 
     private void jButton3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MouseClicked
-       MainApplication1.showPanel("ManageStaffManager");
+        MainApplication1.showPanel("ManageStaffManager");
     }//GEN-LAST:event_jButton3MouseClicked
 
     private void jButton4MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MouseClicked
@@ -205,6 +219,51 @@ public class ManagerSystem extends javax.swing.JPanel {
         MainApplication1.switcher.returnPanel();
     }//GEN-LAST:event_jButton14ActionPerformed
 
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        String[] themeNames = {
+            "Material Darker", "Flat Dark", "Flat Darcula", "Flat Light", "Flat IntelliJ"
+        };
+        String[] themeClasses = {
+            "com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMTMaterialDarkerIJTheme",
+            "com.formdev.flatlaf.FlatDarkLaf",
+            "com.formdev.flatlaf.FlatDarculaLaf",
+            "com.formdev.flatlaf.FlatLightLaf",
+            "com.formdev.flatlaf.FlatIntelliJLaf"
+        };
+
+        String choice = (String) javax.swing.JOptionPane.showInputDialog(
+                this, "Select a theme:", "Theme",
+                javax.swing.JOptionPane.PLAIN_MESSAGE,
+                null, themeNames, themeNames[0]
+        );
+
+        if (choice != null) {
+            for (int i = 0; i < themeNames.length; i++) {
+                if (themeNames[i].equals(choice)) {
+                    try {
+                        javax.swing.UIManager.setLookAndFeel(themeClasses[i]);
+                        for (java.awt.Window w : java.awt.Window.getWindows()) {
+                            javax.swing.SwingUtilities.updateComponentTreeUI(w);
+                            w.revalidate();
+                            w.repaint();
+                        }
+                        // Run after UI updates
+                        javax.swing.SwingUtilities.invokeLater(() -> {
+                            for (java.awt.Window w : java.awt.Window.getWindows()) {
+                                if (w instanceof javax.swing.JFrame jFrame) {
+                                    jFrame.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+                                }
+                            }
+                        });
+                    } catch (Exception ex) {
+                        javax.swing.JOptionPane.showMessageDialog(this, "Failed to apply theme.");
+                    }
+                    break;
+                }
+            }
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
@@ -212,6 +271,7 @@ public class ManagerSystem extends javax.swing.JPanel {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel11;

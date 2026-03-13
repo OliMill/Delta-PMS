@@ -28,17 +28,16 @@ public class PanelSwitching {
     }
 
     public void returnPanel() {
-        // We need at least 2 items in order to return
         if (panelStack.size() > 1) {
             try {
-                panelStack.pop(); // Remove current panel
-                String previousPanel = panelStack.peek(); // Look at the one under it
+                panelStack.pop();
+                String previousPanel = panelStack.peek();
                 mainApp.showPanel(previousPanel);
+                mainApp.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
             } catch (Exception e) {
                 System.err.println("Error returning to panel: " + e.getMessage());
             }
         } else {
-            //in case of stack issues
             System.err.println("Already at the root panel.");
         }
     }
@@ -46,5 +45,5 @@ public class PanelSwitching {
     public Stack<String> getPanelStack() {
         return panelStack;
     }
-    
+
 }

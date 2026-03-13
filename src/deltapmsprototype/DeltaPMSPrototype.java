@@ -23,7 +23,9 @@ public class DeltaPMSPrototype {
             }
 
             java.awt.EventQueue.invokeLater(() -> {
-                new MainApplicationFrame().setVisible(true);
+                MainApplicationFrame frame = new MainApplicationFrame();
+                frame.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+                frame.setVisible(true);
             });
 
         } catch (Exception e) {

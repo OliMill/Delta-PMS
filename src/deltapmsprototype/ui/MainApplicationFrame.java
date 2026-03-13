@@ -54,11 +54,13 @@ public class MainApplicationFrame extends javax.swing.JFrame {
             switcher.pushPanel(name);
         } if (switcher.getPanelStack().peek().equals("MainApplicationFrame")){
             deltapms.session.UserSession.logout();
-            System.out.println(deltapms.session.UserSession.getUserId());
         }
         cl.show(getContentPane(), name);
         getContentPane().revalidate();
         getContentPane().repaint();
+
+        setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+
     }
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(MainApplicationFrame.class.getName());
 
@@ -100,6 +102,8 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jPanel11 = new javax.swing.JPanel();
+        jButton6 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jTextField1 = new javax.swing.JTextField();
         jPasswordField1 = new javax.swing.JPasswordField();
@@ -115,20 +119,56 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/deltapmsprototype/ui/components/DeltaPMSlogo_nobackground.png"))); // NOI18N
 
+        jPanel11.setBackground(new java.awt.Color(89, 4, 20));
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 122, Short.MAX_VALUE)
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 103, Short.MAX_VALUE)
+        );
+
+        jButton6.setBackground(new java.awt.Color(89, 4, 20));
+        jButton6.setFont(new java.awt.Font("Arial Narrow", 0, 24)); // NOI18N
+        jButton6.setForeground(new java.awt.Color(242, 68, 29));
+        jButton6.setText("Theme");
+        jButton6.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 753, Short.MAX_VALUE)
+                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 661, Short.MAX_VALUE)
                 .addComponent(jLabel1))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addContainerGap(502, Short.MAX_VALUE)
+                    .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(503, Short.MAX_VALUE)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE))
                 .addGap(374, 374, 374))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 377, Short.MAX_VALUE)))
         );
 
         jPanel3.setLayout(new java.awt.GridBagLayout());
@@ -329,12 +369,59 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
 
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+        String[] themeNames = {
+            "Material Darker", "Flat Dark", "Flat Darcula", "Flat Light", "Flat IntelliJ"
+        };
+        String[] themeClasses = {
+            "com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMTMaterialDarkerIJTheme",
+            "com.formdev.flatlaf.FlatDarkLaf",
+            "com.formdev.flatlaf.FlatDarculaLaf",
+            "com.formdev.flatlaf.FlatLightLaf",
+            "com.formdev.flatlaf.FlatIntelliJLaf"
+        };
+
+        String choice = (String) javax.swing.JOptionPane.showInputDialog(
+            this, "Select a theme:", "Theme",
+            javax.swing.JOptionPane.PLAIN_MESSAGE,
+            null, themeNames, themeNames[0]
+        );
+
+        if (choice != null) {
+            for (int i = 0; i < themeNames.length; i++) {
+                if (themeNames[i].equals(choice)) {
+                    try {
+                        javax.swing.UIManager.setLookAndFeel(themeClasses[i]);
+                        for (java.awt.Window w : java.awt.Window.getWindows()) {
+                            javax.swing.SwingUtilities.updateComponentTreeUI(w);
+                            w.revalidate();
+                            w.repaint();
+                        }
+                        // Run after UI updates
+                        javax.swing.SwingUtilities.invokeLater(() -> {
+                            for (java.awt.Window w : java.awt.Window.getWindows()) {
+                                if (w instanceof javax.swing.JFrame jFrame) {
+                                    jFrame.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+                                }
+                            }
+                        });
+                    } catch (Exception ex) {
+                        javax.swing.JOptionPane.showMessageDialog(this, "Failed to apply theme.");
+                    }
+                    break;
+                }
+            }
+        }
+    }//GEN-LAST:event_jButton6ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton6;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel11;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPasswordField jPasswordField1;
