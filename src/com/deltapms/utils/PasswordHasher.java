@@ -16,6 +16,8 @@ import java.util.regex.Pattern;
 public class PasswordHasher {
 
     // A "Pepper" to ensure secure passwords even if hash is guessed
+    // A pepper is appended before hashing. Unlike a salt, the pepper 
+    // is a server-side secret, adding an extra layer of security.
     private static final String PEPPER = "z8$Kj#29L!mP5vQ7xR0@nW3eY6tU1"; 
 
     public static String hashPassword(String plainTextPassword) {

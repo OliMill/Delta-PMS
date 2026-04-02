@@ -156,7 +156,9 @@ public class DataManager {
 
             if (rowsAffected > 0) {
                 loadDataFromDatabase();
-
+                
+                // Email is sent on a background thread to avoid blocking the UI.
+                // SMTP calls can take several seconds; running on EDT would freeze the window.
                 // Logic to send email regardless of who is logged in
                 new Thread(() -> {
                     String targetEmail = "";
@@ -257,7 +259,11 @@ public class DataManager {
         // Iterate through all rooms and filter them based on availability
         return rooms.stream()
                 .filter(room -> {
-
+                    // Overlap condition: an existing booking conflicts if its check-in is
+                    // before the proposed check-out AND its check-out is after the proposed
+                    // check-in. This covers full and partial overlaps.
+                    
+                    
                     // Check if ANY booking in the ENTIRE hotel list (DataManager.bookings) 
                     // conflicts with the proposed dates AND belongs to the current room.
                     boolean hasConflict = bookings.stream()

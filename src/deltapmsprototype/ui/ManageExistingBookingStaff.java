@@ -39,26 +39,26 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
         initComponents();
         MainApplication1 = MainApplication;
 
-        // 1. Load Data from DB
+        // Load Data from DB
         DataManager.loadDataFromDatabase();
 
-        // 2. Cache Customer Names for display (Optimization)
+        // Cache Customer Names for display (Optimization)
         cacheCustomerNames();
 
-        // 3. Setup Table
+        // Setup Table
         setupCustomTable();
 
         // CALENDAR INITIALIZATION LOGIC START
         dateCalendar = new com.toedter.calendar.JCalendar();
         calendarPopup = new javax.swing.JPopupMenu();
 
-        // 1. Add the JCalendar to the JPopupMenu
+        // Add the JCalendar to the JPopupMenu
         calendarPopup.add(dateCalendar);
 
         // Set initial button text to today's date
         jButton2.setText("Select Date: " +  DATE_FORMAT.format(new java.util.Date()));
 
-        // 2. Add the listener to handle date selection
+        // Add the listener to handle date selection
         dateCalendar.addPropertyChangeListener("day", (java.beans.PropertyChangeEvent evt) -> {
             // This block only runs when a specific DAY is clicked
             java.util.Date selectedDate = dateCalendar.getDate();
@@ -85,7 +85,7 @@ public class ManageExistingBookingStaff extends javax.swing.JPanel {
 
     private void setupCustomTable() {
     // Set start date and convert to local date
-    // 1. Ensure the start date is initialized
+    // Ensure the start date is initialized
     if (startDateDisplay == null) {
         startDateDisplay = LocalDate.now(); 
     } else {

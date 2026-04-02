@@ -52,7 +52,12 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         //ensure doesnt add duplicate panels on stack if returning panels
         if(!switcher.getPanelStack().peek().equals(name)){
             switcher.pushPanel(name);
-        } if (switcher.getPanelStack().peek().equals("MainApplicationFrame")){
+            
+            
+        } 
+        // When returning to the login screen, the session is cleared 
+        // to ensure no data from the previous user remains in memory.
+        if (switcher.getPanelStack().peek().equals("MainApplicationFrame")){
             deltapms.session.UserSession.logout();
         }
         cl.show(getContentPane(), name);
