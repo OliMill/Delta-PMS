@@ -352,18 +352,21 @@ public class CreateNewLogin extends javax.swing.JPanel {
         //DOB checking
         // Get selected date
         Date dateOB = dateCalendar.getDate();
-        if (!(dateOB == null)) {
-            //current date
-            LocalDate validDOB = LocalDate.now().minusYears(18);
-            validDOB.plusDays(1);
-            // Convert LocalDate to java.util.Date
-            Date date = Date.from(validDOB.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-            if (dateOB.after(date)) {
-                errorMessage = errorMessage + "You must be over 18 to own a DeltaPMS account\n";
+        if (dateOB != null) {
+            // Calculate the latest possible birth date for an 18-year-old
+            // If today is 2026-04-02, they must be born on or before 2008-04-02
+            LocalDate eighteenYearsAgo = LocalDate.now().minusYears(18);
+
+            // Convert LocalDate to Date for comparison
+            Date cutOffDate = Date.from(eighteenYearsAgo.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+            if (dateOB.after(cutOffDate)) {
+                errorMessage += "You must be over 18 to own a DeltaPMS account\n";
+                validAccount = false;
             }
-
         } else {
+            errorMessage += "Please select a Date of Birth\n";
             validAccount = false;
         }
 
@@ -378,11 +381,21 @@ public class CreateNewLogin extends javax.swing.JPanel {
             if (code.compareTo(input) == 0) {
 
                 try {
-                    DataManager.addNewCustomer(jTextField1.getText(), jTextField2.getText(), dateOB, jTextField4.getText(), PasswordHasher.hashPassword(new String(jPasswordField1.getPassword())));
+                    String passwordRaw = new String(jPasswordField1.getPassword());
+                    String hashedPassword = PasswordHasher.hashPassword(passwordRaw);
+
+                    DataManager.addNewCustomer(
+                            jTextField1.getText(),
+                            jTextField2.getText(),
+                            dateOB,
+                            jTextField4.getText(),
+                            hashedPassword
+                    );
+                    
                     JOptionPane.showMessageDialog(null, "Code Matches, redirecting you shortly");
                     MainApplication.showPanel("MainApplicationFrame");
-                
-                    } catch (java.sql.SQLException ex) {
+
+                } catch (java.sql.SQLException ex) {
                     // Check for Duplicate Entry (SQLState 23000 or MySQL code 1062)
                     if (ex.getErrorCode() == 1062 || "23000".equals(ex.getSQLState())) {
                         javax.swing.JOptionPane.showMessageDialog(

@@ -264,7 +264,8 @@ public class MainApplicationFrame extends javax.swing.JFrame {
         // Check customers first
         for (Customer customer : customers) {
             if (customer.getEmail().equalsIgnoreCase(email)) {
-
+                System.out.println(password);
+                System.out.println(customer.getPasswordHash());
                 if (PasswordHasher.verifyPassword(password, customer.getPasswordHash())) {
                     // Set up user session
                     deltapms.session.UserSession.login(
