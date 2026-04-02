@@ -7,7 +7,6 @@ package deltapmsprototype.ui;
 import com.deltapms.utils.EmailService;
 import com.deltapms.utils.PasswordHasher;
 import com.hotelmanagement.dao.DataManager;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -37,24 +36,36 @@ public class CreateNewLogin extends javax.swing.JPanel {
         initComponents();
         this.MainApplication = MainApplication;
         
+                
+        // CALENDAR INITIALIZATION LOGIC START
+        
         dateCalendar = new com.toedter.calendar.JCalendar();
         calendarPopup = new javax.swing.JPopupMenu();
         calendarPopup.add(dateCalendar);
-        // 2. Add the listener to handle date selection
-        dateCalendar.addPropertyChangeListener("calendar", new java.beans.PropertyChangeListener() {
+
+        dateCalendar = new com.toedter.calendar.JCalendar();
+        calendarPopup = new javax.swing.JPopupMenu();
+
+        // Add the JCalendar to the JPopupMenu
+        calendarPopup.add(dateCalendar);
+
+        // Set initial button text to today's date
+        jButton3.setText("Select Date of Birth");
+
+        // Add the listener to handle date selection
+        dateCalendar.addPropertyChangeListener("day", new java.beans.PropertyChangeListener() {
             @Override
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 if ("calendar".equals(evt.getPropertyName())) {
                     java.util.Date selectedDate = dateCalendar.getDate();
 
-                    // Update the button's text
-                    jButton3.setText("Selected Date: " + DATE_FORMAT.format(selectedDate));
 
                     // Hide the popup
                     calendarPopup.setVisible(false);
                 }
             }
         });
+
 
     }
 

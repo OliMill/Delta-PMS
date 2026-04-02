@@ -57,7 +57,6 @@ public class NewBookingCustomer extends javax.swing.JPanel {
             }
         });
 
-        // Check if user is logged in
         // CALENDAR INITIALIZATION LOGIC START
         dateCalendar = new com.toedter.calendar.JCalendar();
         calendarPopup = new javax.swing.JPopupMenu();

@@ -3,8 +3,6 @@ package deltapmsprototype;
 import com.hotelmanagement.dao.DataManager; 
 import deltapmsprototype.ui.MainApplicationFrame;
 import javax.swing.JOptionPane; 
-import com.formdev.flatlaf.FlatDarculaLaf;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMTMaterialDarkerIJTheme;
 public class DeltaPMSPrototype {
     /**
      * @param args the command line arguments
@@ -17,7 +15,7 @@ public class DeltaPMSPrototype {
 
             try {
                 // Load the theme
-                FlatMTMaterialDarkerIJTheme.setup();
+
                 javax.swing.UIManager.put("TitlePane.unifiedBackground", false);
                 javax.swing.UIManager.put("TitlePane.background", new javax.swing.plaf.ColorUIResource(89, 4, 20));
                 javax.swing.UIManager.put("TitlePane.foreground", new javax.swing.plaf.ColorUIResource(255, 255, 255));
